@@ -1,65 +1,60 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@400;500&family=Space+Grotesk&display=swap'); 
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@400;500&family=Space+Grotesk&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
 }
 
-body{
+body {
     background: rgba(59, 109, 156, 0.905);
 }
 
-.wrapper{
+.wrapper {
     display: flex;
     height: 100vh;
-    width: 100vw;
 }
 
-.section-carousel{
+.section-carousel {
     padding: 10px;
     gap: 10px;
     width: 40%;
     height: 100vh;
     background: rgb(200, 227, 246);
     mix-blend-mode: normal;
-
     border-radius: 0px 10px 10px 0px;
 }
 
-.section-carousel .container{
+.section-carousel .container {
     margin-top: 10vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0px;
     gap: 24px;
-
-    /*border: 1px solid red;*/
     height: 70vh;
     width: 75%;
 }
 
-.img{
+.img {
     mix-blend-mode: darken;
     flex: none;
     order: 0;
     flex-grow: 0;
 }
 
-.description-carousel{
+.description-carousel {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 25px 33px;
     gap: 24px;
-
     flex: none;
     order: 1;
     flex-grow: 0;
 }
 
-.description-carousel p:first-of-type{
+.description-carousel p:first-of-type {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 500;
@@ -73,7 +68,7 @@ body{
     flex-grow: 0;
 }
 
-.description-carousel p:last-of-type{
+.description-carousel p:last-of-type {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
@@ -86,14 +81,13 @@ body{
     flex-grow: 0;
 }
 
-
-.section-login{
+.section-login {
     padding-left: 10vw;
-    padding-top: 10vh;
+    padding-top: 5vh;
     color: #fff;
 }
 
-.section-login .container-logo p{
+.section-login .container-logo p {
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 600;
@@ -101,16 +95,15 @@ body{
     line-height: 27px;
 }
 
-.section-login .container-login .container{
+.section-login .container-login .container {
     display: flex;
     flex-direction: column;
     padding: 0;
-
     height: 70vh;
-    margin-top: 10vh;
+    margin-top: 5vh;
 }
 
-.section-login .container-login .container p:first-of-type{
+.section-login .container-login .container>p:nth-of-type(1) {
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 800;
@@ -118,10 +111,198 @@ body{
     line-height: 49px;
 }
 
-.section-login .container-login .container p:last-of-type{
+.section-login .container-login .container>p:nth-of-type(2) {
     font-family: 'Space Grotesk';
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
     line-height: 26px;
+}
+
+.g_id_signin * {
+    background-color: transparent !important;
+    color: #fff !important;
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+}
+
+.or-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 0px;
+    gap: 6px;
+    padding-bottom: 0;
+}
+
+.or-section p:first-of-type,
+.or-section p:last-of-type {
+    width: 247px;
+    height: 0px;
+
+    border: 1px solid #FFFFFF;
+    transform: rotate(-180deg);
+}
+
+.or-section p:nth-of-type(2) {
+    width: 20px;
+    height: 26px;
+
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+    color: #FFFFFF;
+}
+
+.wrapper-login {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 12px;
+    gap: 25px;
+    border: 1px solid #D9D9D9;
+    border-radius: 6px;
+}
+
+.wrapper-login .input-group * {
+    background-color: transparent;
+    color: #fff;
+}
+
+.wrapper-login .input-group input,
+.wrapper-login .input-group-text {
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    border-radius: 0;
+}
+
+.form-control:focus {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    box-shadow: inherit !important;
+}
+
+.wrapper-login .input-group .input-group-addon {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #fff;
+}
+
+iconify-icon {
+    padding-left: 10px;
+}
+
+.wrapper-login .input-group .input-group-addon p {
+    width: 24.33px;
+    height: 0px;
+    border: 1px solid #FFFFFF;
+    transform: rotate(-90deg);
+    margin-bottom: 0;
+    margin-right: -10px;
+}
+
+.form-floating label {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 26px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    /*border: 1px solid green;*/
+    -webkit-text-fill-color: #fff;
+    /*-webkit-box-shadow: 0 0 0px 1000px #000 inset;*/
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.settings-login {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0px 13px;
+    width: 100%;
+}
+
+.settings-login .form-check-label {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 19px;
+}
+
+.settings-login a {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 19px;
+    text-decoration-line: underline !important;
+}
+
+.container-login #btnLogin {
+    width: 100%;
+    height: 50px;
+    background: #04142D;
+    border-radius: 6px;
+    color: #fff;
+
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.container-login #btnLogin:active {
+    border-color: #04142D;
+}
+
+.form-check-input:focus {
+    border-color: #fff;
+    box-shadow: none;
+}
+
+
+/*Media query for mobile*/
+@media (max-width: 768px) {
+    .wrapper {
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        align-content: center;
+        height: auto;
+        width: auto;
+    }
+
+    .section-carousel {
+        width: 100vw;
+        height: 90vh;
+        border-radius: 0 0 0 0;
+    }
+
+    .section-login {
+        padding-left: 0;
+        padding-top: 5vh;
+        width: 80vw;
+        height: 90vh;
+    }
+
+    .settings-login {
+        display: inline;
+    }
+
+    .settings-login p {
+        margin-bottom: 0;
+    }
 }
