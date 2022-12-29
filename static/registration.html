@@ -8,6 +8,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="index.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <title>Registrazione Perizie & Rilievi</title>
@@ -24,9 +27,15 @@
                         reale</p>
                 </div>
             </div>
+            <div class="container-row">
+                <a class="d-lg-none d-xl-none d-xxl-none
+                    d-sm-block  d-md-block" href="#registrationLogin">
+                    <i class="fa-solid fa-arrow-down fa-3x" id="arrow"></i>
+                </a>
+            </div>
         </div>
 
-        <div class="section-login">
+        <div id="registrationLogin" class="section-login">
             <!--<div class="container-logo">
                 <p>Logo of the brand</p>
             </div>-->
@@ -92,7 +101,7 @@
                         <button type="button" id="btnRegistration" class="btn">Registrati</button>
                         <div class="settings-login notLogged">
                             <p>Hai un account?</p>
-                            <a>Login</a>
+                            <a href="./index.html">Login</a>
                         </div>
                     </div>
 

@@ -255,6 +255,7 @@ input:-webkit-autofill:focus {
     line-height: 19px;
     text-decoration-line: underline !important;
     cursor: pointer;
+    color: #fff !important;
 }
 
 .container-login #btnLogin,
@@ -291,6 +292,20 @@ input[type="checkbox"]:checked{
     border-color: #fff;
 }
 
+.container-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;    
+    justify-content: center;
+    margin-top: -30px;
+}
+
+#arrow{
+    background-color: transparent;
+    border: none;
+    color: #4D7BA5;
+}
+
 /*Media query for pc (1920 x 920)*/
 @media (min-width: 1920px) {
     .section-login,
@@ -301,8 +316,13 @@ input[type="checkbox"]:checked{
 
 /*Media query for mobile*/
 @media (max-width: 768px) {
+    .description-carousel {
+        padding: 0;
+    }
+
     .section-carousel .container{
-        width: 100vw;
+        width: 80vw;
+        justify-content: center;
     }
 
     .img-fluid{
