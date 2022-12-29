@@ -301,6 +301,10 @@ input[type="checkbox"]:checked{
 
 /*Media query for mobile*/
 @media (max-width: 768px) {
+    .section-carousel .container{
+        width: 100vw;
+    }
+
     .img-fluid{
         max-width: 50% !important;
     }
