@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@400;500&family=Space+Grotesk&display=swap'); 
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: rgba(59, 109, 156, 0.905);
+}
+
+.wrapper{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.section-carousel{
+    padding: 10px;
+    gap: 10px;
+    width: 40%;
+    height: 100vh;
+    background: rgb(200, 227, 246);
+    mix-blend-mode: normal;
+
+    border-radius: 0px 10px 10px 0px;
+}
+
+.section-carousel .container{
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 24px;
+
+    /*border: 1px solid red;*/
+    height: 70vh;
+    width: 75%;
+}
+
+.img{
+    mix-blend-mode: darken;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.description-carousel{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 33px;
+    gap: 24px;
+
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.description-carousel p:first-of-type{
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 35px;
+    line-height: 52px;
+    text-align: center;
+    letter-spacing: -0.03em;
+    color: #000000;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.description-carousel p:last-of-type{
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    text-align: center;
+    color: #000000;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+
+.section-login{
+    padding-left: 10vw;
+    padding-top: 10vh;
+    color: #fff;
+}
+
+.section-login .container-logo p{
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 27px;
+}
+
+.section-login .container-login .container{
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    height: 70vh;
+    margin-top: 10vh;
+}
+
+.section-login .container-login .container p:first-of-type{
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 49px;
+}
+
+.section-login .container-login .container p:last-of-type{
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+}
