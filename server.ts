@@ -26,7 +26,7 @@ const corsOptions = {
   },
   credentials: true,
 };
-const privateKey = fs.readFileSync("keys/privateKey.pem", "utf8");
+//const privateKey = fs.readFileSync("keys/privateKey.pem", "utf8");
 const DURATA_TOKEN = 50; // offset in secondi rispetto alla data corrente dove poi mi richiederà di fare il login
 
 // ***************************** Avvio ****************************************
@@ -149,7 +149,7 @@ function createToken(user: any) {
     "_id" : user._id,
     "username" : user.username
   }
-  let token = jwt.sign(payload, privateKey); //usiamo come privateKey una qualsiasi stringa (noi usiamo una chiave privata RSA per firmare il token)
+  let token = jwt.sign(payload, "privateKey"); //usiamo come privateKey una qualsiasi stringa (noi usiamo una chiave privata RSA per firmare il token)
   console.log("Creato nuovo token: " + token);
   return token;
 }
@@ -164,7 +164,7 @@ app.use("/api/", (req:any, res:any, next:any) => {
     res.send("Token mancante"); //non autorizzato
   } else {
     //verifico il token (se è valido o meno)
-    jwt.verify(token, privateKey, (err:any, payload:any) => {
+    jwt.verify(token, "privateKey", (err:any, payload:any) => {
       //lui si calcola la hash del token e la confronta con quella che ha in memoria (se è uguale allora è valido)
       if (err) {
         res.status(403);
