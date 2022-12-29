@@ -10,7 +10,7 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
     <link rel="stylesheet" href="index.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <title>Login Perizie & Rilievi</title>
+    <title>Registrazione Perizie & Rilievi</title>
 </head>
 
 <body>
@@ -26,15 +26,15 @@
             </div>
         </div>
 
-        <div id="sectionLogin" class="section-login">
+        <div class="section-login">
             <!--<div class="container-logo">
                 <p>Logo of the brand</p>
             </div>-->
 
             <div class="container-login">
                 <div class="container">
-                    <p>Bentornato, effettua il login </p>
-                    <p>Inserisci i tuoi dati per completare l'operazione di login</p>
+                    <p>Crea un nuovo account </p>
+                    <p>Inserisci i tuoi dati per completare la registrazione</p>
                     <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID"
                         data-login_uri="https://your.domain/your_login_endpoint" data-auto_prompt="false">
                     </div>
@@ -47,6 +47,16 @@
                         <p></p>
                     </div>
                     <div class="wrapper-login">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <iconify-icon icon="mdi:user-outline" width="20" height="20"></iconify-icon>
+                                <p></p>
+                            </span>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtNominativo" placeholder="Nominativo">
+                                <label for="txtNominativo">Nominativo</label>
+                            </div>
+                        </div>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <iconify-icon icon="ic:outline-email" width="20" height="20"></iconify-icon>
@@ -68,19 +78,21 @@
                                 <label for="txtPassword">Password</label>
                             </div>
                         </div>
-                        <div class="settings-login">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="chkRememberLogged">
-                                <label class="form-check-label" for="chkRememberLogged">
-                                    Ricordami per 30 giorni
-                                </label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <iconify-icon icon="ph:phone" width="20" height="20"></iconify-icon>
+                                <p></p>
+                            </span>
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="txtTel" placeholder="Telefono">
+                                <label for="txtTel">Telefono</label>
                             </div>
-                            <a>Password dimenticata?</a>
                         </div>
-                        <button type="button" id="btnLogin" class="btn">Login</button>
+
+                        <button type="button" id="btnRegistration" class="btn">Registrati</button>
                         <div class="settings-login notLogged">
-                            <p>Non hai un account?</p>
-                            <a>Registrati</a>
+                            <p>Hai un account?</p>
+                            <a>Login</a>
                         </div>
                     </div>
 

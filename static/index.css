@@ -83,7 +83,13 @@ body {
 
 .section-login {
     padding-left: 10vw;
-    padding-top: 5vh;
+    padding-top: 1vh;
+    color: #fff;
+}
+
+#sectionLogin.section-login {
+    padding-left: 10vw;
+    padding-top: 7vh;
     color: #fff;
 }
 
@@ -100,7 +106,7 @@ body {
     flex-direction: column;
     padding: 0;
     height: 70vh;
-    margin-top: 5vh;
+    margin-top: 1vh;
 }
 
 .section-login .container-login .container>p:nth-of-type(1) {
@@ -248,9 +254,11 @@ input:-webkit-autofill:focus {
     font-size: 15px;
     line-height: 19px;
     text-decoration-line: underline !important;
+    cursor: pointer;
 }
 
-.container-login #btnLogin {
+.container-login #btnLogin,
+.container-login #btnRegistration {
     width: 100%;
     height: 50px;
     background: #04142D;
@@ -273,9 +281,30 @@ input:-webkit-autofill:focus {
     box-shadow: none;
 }
 
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked{
+    content: '\1F5F8'; /*unicode per l'immagine del checkbox*/
+    background-color: transparent;
+    border-color: #fff;
+}
+
+/*Media query for pc (1920 x 920)*/
+@media (min-width: 1920px) {
+    .section-login,
+    #sectionLogin.section-login {
+        padding-top: 13vh;
+    }
+}
 
 /*Media query for mobile*/
 @media (max-width: 768px) {
+    .img-fluid{
+        max-width: 50% !important;
+    }
+
     .wrapper {
         display: grid;
         align-items: center;
@@ -291,15 +320,20 @@ input:-webkit-autofill:focus {
         border-radius: 0 0 0 0;
     }
 
-    .section-login {
+    .section-login,
+    #sectionLogin.section-login {
         padding-left: 0;
         padding-top: 5vh;
         width: 80vw;
-        height: 90vh;
+        height: 120vh;
     }
 
     .settings-login {
         display: inline;
+    }
+
+    .notLogged{
+        display: flex;
     }
 
     .settings-login p {
