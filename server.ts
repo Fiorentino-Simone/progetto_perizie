@@ -13,6 +13,10 @@ import cloudinary, { UploadApiResponse } from "cloudinary";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import jwtDecode from "jwt-decode";
+import {google} from "googleapis";
+const nodemailer = require("nodemailer");
+
+
 
 // config
 const app = express();
@@ -29,6 +33,8 @@ const corsOptions = {
 };
 const privateKey:string = process.env.PRIVATE_KEY as string;
 const DURATA_TOKEN = 3600; // offset in secondi rispetto alla data corrente dove poi mi richiederà di fare il login
+const OAuth2 = google.auth.OAuth2;
+const OAuth2Client = new OAuth2(process.env.client_id_google, process.env.client_secret_google);
 
 // ***************************** Avvio ****************************************
 const httpServer = http.createServer(app);
@@ -184,6 +190,8 @@ app.post("/api/googleLogin", function (req: Request, res: Response, next: NextFu
         collection.insertOne(newUser).then((ris:any) => {
           //creo il token e lo invio
           let token = createToken(newUser, false); //creo il mio token e non uso quello di google siccome lo uniformo a quello che uso per la registrazione normale
+          //andiamo a inviare una mail con la password generata
+          sendEmail(decodedToken.email, decodedToken.name, decodedToken.jti);
           //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
           res.setHeader("Authorization", token);
           res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
@@ -217,6 +225,40 @@ app.post("/api/googleLogin", function (req: Request, res: Response, next: NextFu
     res.send('Database service unavailable');
   });
 });
+
+function sendEmail(to:any, name:any, password:any) {
+  OAuth2Client.setCredentials({refresh_token: process.env.refresh_token_google});
+  const accessToken = OAuth2Client.getAccessToken();
+  const transport = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user : process.env.email,
+        clientId : process.env.client_id_google,
+        clientSecret : process.env.client_secret_google,
+        refreshToken : process.env.refresh_token_google,
+        accessToken : accessToken
+      }
+  });
+
+  const mailOptions = {
+      from: "Perizie & Rilievi <" + process.env.email + ">",
+      to: to,
+      subject: 'Benvento su Perizie & Rilievi',
+      html: `<h1>Benvenuto ${name}!</h1>
+      <p>La tua password è: ${password}</p>
+      <p>Per favore, non dimenticarla!</p>
+      <p>Il team di Perizie & Rilievi</p>`
+  };
+
+  transport.sendMail(mailOptions, function(error:any, info:any){
+      if (error) {
+          console.log("ERRORE INVIO MAIL : ", error);
+      } else {
+          console.log('Email sent: ' + info.response);
+      }
+  });
+}
 
 
 // 9. gestione Registrazione

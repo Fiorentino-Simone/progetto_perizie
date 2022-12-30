@@ -18,10 +18,12 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
+    "googleapis": "^110.0.0",
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^3.1.2",
     "mime": "^3.0.0",
     "mongodb": "^4.10.0",
+    "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "query-string": "^7.1.1",
     "ts-node": "^10.9.1",
@@ -41,5 +43,8 @@
   "bugs": {
     "url": "https://github.com/Fiorentino-Simone/progetto_perizie/issues"
   },
-  "homepage": "https://github.com/Fiorentino-Simone/progetto_perizie#readme"
+  "homepage": "https://github.com/Fiorentino-Simone/progetto_perizie#readme",
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.7"
+  }
 }
