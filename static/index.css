@@ -306,6 +306,16 @@ input[type="checkbox"]:checked{
     color: #4D7BA5;
 }
 
+.icona-rossa{
+	color: #dc3545;  /* colore usato da is-invalid */
+	border:1px solid #dc3545; 
+	border-right:transparent;
+}
+
+.my-is-invalid{
+    border-color: var(--bs-danger) !important;
+}
+
 /*Media query for pc (1920 x 920)*/
 @media (min-width: 1920px) {
     .section-login,
