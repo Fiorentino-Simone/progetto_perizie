@@ -17,7 +17,7 @@ import jwt from "jsonwebtoken";
 const app = express();
 const HTTP_PORT = process.env.PORT || 1337;
 dotenv.config({ path: ".env" });
-const DBNAME = "MongoDB_Esercizi";
+const DBNAME = "ProgettoPerizie";
 const CONNECTION_STRING = process.env.connectionString;
 cloudinary.v2.config(JSON.parse(process.env.cloudinary as string));
 const corsOptions = {
@@ -26,8 +26,8 @@ const corsOptions = {
   },
   credentials: true,
 };
-//const privateKey = fs.readFileSync("keys/privateKey.pem", "utf8");
-const DURATA_TOKEN = 50; // offset in secondi rispetto alla data corrente dove poi mi richiederà di fare il login
+const privateKey:string = process.env.PRIVATE_KEY as string;
+const DURATA_TOKEN = 3600; // offset in secondi rispetto alla data corrente dove poi mi richiederà di fare il login
 
 // ***************************** Avvio ****************************************
 const httpServer = http.createServer(app);
@@ -79,82 +79,152 @@ app.use("/", function (req, res, next) {
 app.use("/", cors(corsOptions));
 
 // 7. gestione login
-app.post(
-  "/api/login",
-  function (req: Request, res: Response, next: NextFunction) {
-    let connection = new MongoClient(CONNECTION_STRING as string);
-    connection
-      .connect()
-      .then((client: MongoClient) => {
-        const collection = client.db(DBNAME).collection("Mails");
-        let regex = new RegExp(`^${req.body.username}$`, "i"); // case insensitive
-        collection
-          .findOne({ username: regex })
-          .then((dbUser: any) => {
-            if (!dbUser) {
-              res.status(401); // user o password non validi
-              res.send("User not found");
-            } else {
-              //confronto la password
-              bcrypt.compare(
-                req.body.password,
-                dbUser.password,
-                (err: Error, ris: Boolean) => {
-                  if (err) {
-                    res.status(500);
-                    res.send("Errore bcrypt " + err.message);
-                    console.log(err.stack);
-                  } else {
-                    if (!ris) {
-                      // password errata
-                      res.status(401);
-                      res.send("Wrong password");
-                    } else {
-                      //creo il token e lo invio
-                      let token = createToken(dbUser);
-                      //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
-                      res.setHeader("Authorization", token);
-                      res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
-                      res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
-                    }
-                  }
-                }
-              );
-            }
-          })
-          .catch((err: Error) => {
+app.post("/api/login", function (req: Request, res: Response, next: NextFunction) {
+  let remember30days = req.body.remember30days;
+  let connection = new MongoClient(CONNECTION_STRING as string);
+  connection.connect().then((client: MongoClient) => {
+    const collection = client.db(DBNAME).collection("Utenti");
+    let regex = new RegExp(`^${req.body.email}$`, "i"); // case insensitive
+    collection.findOne({ "email": regex }).then((dbUser: any) => {
+      if (!dbUser) {
+        res.status(401); // user o password non validi
+        res.send("User not found");
+      } 
+      else {
+        //confronto la password
+        bcrypt.compare(req.body.password, dbUser.password, (err: Error, ris: Boolean) => {
+          if (err) {
             res.status(500);
-            res.send("Query error " + err.message);
+            res.send("Errore bcrypt " + err.message);
             console.log(err.stack);
-          })
-          .finally(() => {
-            client.close();
-          });
-      })
-      .catch((err:Error)=>{
-        res.status(503);
-        res.send('Database service unavailable');
-      });
-  }
-);
+          } 
+          else {
+            if (!ris) {
+              // password errata
+              res.status(401);
+              res.send("Wrong password");
+            } else {
+              //creo il token e lo invio
+              let token = createToken(dbUser, remember30days);
+              //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
+              res.setHeader("Authorization", token);
+              res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
+              res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
+            }
+          }
+        });
+      }
+    })
+    .catch((err: Error) => {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    })
+    .finally(() => {
+      client.close();
+    });
+  })
+  .catch((err:Error)=>{
+    res.status(503);
+    res.send('Database service unavailable');
+  });
+});
 
 
-function createToken(user: any) {
+function createToken(user: any, remember30days?: boolean ) {
   //legge la data corrente
   let time:any = (new Date().getTime())/1000; // prendo i millisecondi e poi in secondi
   let now:number = parseInt(time); //converto in intero
+  let exp;
+  if (typeof remember30days !== 'undefined') {
+    if (remember30days) exp = now + 30 * 24 * 60 * 60; // 30 giorni
+    else exp = now + DURATA_TOKEN; // 1 ora
+  } else {
+    // guardare nel payload se c'è il campo remember30days
+    remember30days = user.remember30days;
+    if (user.remember30days) exp = now + 30 * 24 * 60 * 60; // 30 giorni
+    else exp = now + DURATA_TOKEN; // 1 ora
+  }
   let payload = {
     "iat" : user.iat || now, //se esiste già il token, allora prendo la data di creazione, altrimenti la data corrente
-    "exp" : now + DURATA_TOKEN, // scade in tot secondi
+    "exp" : exp, // scade in tot secondi
     "_id" : user._id,
-    "username" : user.username
+    "email" : user.email,
+    "remember30days" : user.remember30days || remember30days,
   }
-  let token = jwt.sign(payload, "privateKey"); //usiamo come privateKey una qualsiasi stringa (noi usiamo una chiave privata RSA per firmare il token)
+  let token = jwt.sign(payload, privateKey); //usiamo come privateKey una qualsiasi stringa (noi usiamo una chiave privata RSA per firmare il token)
   console.log("Creato nuovo token: " + token);
   return token;
 }
 
-// 8. gestione Logout
+// 8. gestione Registrazione
+app.post("/api/registration", (req:any, res:any, next:any) => {
+  let connection = new MongoClient(CONNECTION_STRING as string);
+  connection.connect().then((client: MongoClient) => {
+    const collection = client.db(DBNAME).collection("Utenti");
+    let regex = new RegExp(`^${req.body.email}$`, "i"); // case insensitive
+    collection.findOne({ "email": regex })
+    .then((dbUser: any) => {
+      if (dbUser) {
+        res.status(401); // user o password non validi
+        res.send("User already exists");
+      } 
+      else {
+        //creo il nuovo utente
+        let codOperator:string = creaCodiceOperatore();
+        let pwdBcrypt = bcrypt.hashSync(req.body.password, 10); //trasformo la password in hash
+        let newUser = {
+          "codOperator": codOperator,
+          "email": req.body.email,
+          "password": pwdBcrypt,
+          "phone" : req.body.phone,
+          "admin" : false,
+          "nominativo" : req.body.nominativo
+        }
+        collection.insertOne(newUser).then((ris:any) => {
+          //creo il token e lo invio
+          let token = createToken(newUser, false);
+          //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
+          res.setHeader("Authorization", token);
+          res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
+          res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
+        })
+        .catch((err: Error) => {
+          res.status(500);
+          res.send("Query error " + err.message);
+          console.log(err.stack);
+        })
+        .finally(() => {
+          client.close();
+        });
+      }
+    })
+    .catch((err: Error) => {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    })
+  })
+  .catch((err:Error)=>{
+    res.status(503);
+    res.send('Database service unavailable');
+  });
+});
+
+function creaCodiceOperatore(){
+  //4 lettere maiuscole casuali + 4 numeri casuali
+  let codice = "";
+  for (let i = 0; i < 4; i++) {
+    let lettera = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    codice += lettera;
+  }
+  for (let i = 0; i < 4; i++) {
+    let numero = Math.floor(Math.random() * 10);
+    codice += numero;
+  }
+  return codice as string;
+}
+
 
 // 9. Controllo del Token
 app.use("/api/", (req:any, res:any, next:any) => {
@@ -164,7 +234,7 @@ app.use("/api/", (req:any, res:any, next:any) => {
     res.send("Token mancante"); //non autorizzato
   } else {
     //verifico il token (se è valido o meno)
-    jwt.verify(token, "privateKey", (err:any, payload:any) => {
+    jwt.verify(token, privateKey, (err:any, payload:any) => {
       //lui si calcola la hash del token e la confronta con quella che ha in memoria (se è uguale allora è valido)
       if (err) {
         res.status(403);
@@ -199,29 +269,21 @@ app.use("/api/", function (req: any, res: any, next: NextFunction) {
 
 /* ********************* (Sezione 3) USER ROUTES  ************************** */
 
-app.get("/api/elencoMail", (req: any, res: Response, next: NextFunction) => {
-  let collection = req["connessione"].db(DBNAME).collection("Mails");
+app.get("/api/users", (req: any, res: Response, next: NextFunction) => {
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
   //prendiamo l'utente dal token
-  let user = req["payload"];
-  let id = new ObjectId(user._id); //ricordo serve l'ObjectId per fare la query di selezione
-  collection.findOne({ _id:  id}, (err: Error, data: any) => {
+  //let user = req["payload"];
+  //let id = new ObjectId(user._id); //ricordo serve l'ObjectId per fare la query di selezione
+  collection.find().toArray((err: any, result: any) => {
     if (err) {
       res.status(500);
-      res.send("Errore query " + err.message);
+      res.send("Query error " + err.message);
       console.log(err.stack);
-      } else {
-        if (data) {
-          let mails = data.mail;
-          mails.reverse();
-          res.send(mails);
-        } 
-        else {
-          res.status(404);  
-          res.send("Mail non trovate");
-        }
-        req["connessione"].close();
-      }
-    });
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
 });
 
 /* ********************** (Sezione 4) DEFAULT ROUTE  ************************* */
