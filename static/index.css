@@ -125,7 +125,15 @@ body {
     line-height: 26px;
 }
 
-.g_id_signin * {
+#googleDiv{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.g_id_signin * ,
+#googleDiv *{
     background-color: transparent !important;
     color: #fff !important;
     font-family: 'Space Grotesk';

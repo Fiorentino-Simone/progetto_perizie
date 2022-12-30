@@ -18,6 +18,41 @@ $(document).ready(function () {
   if ($(window).width() < 768)
     lampeggia();
 
+
+  /*global google*/
+  google.accounts.id.initialize({
+    "client_id": "426153637541-f66k37cc793jejdbg1llisk75kbfckt2.apps.googleusercontent.com",
+    "callback": function (response) {
+      if (response.credential !== "") {
+        let request = inviaRichiesta("POST", "/api/googleLogin", {
+          token: response.credential
+        });
+        request.fail(errore);
+        request.done(function (data, test_status, jqXHR) {
+          console.log(jqXHR.getResponseHeader('Authorization')) //prendiamo il token			
+          window.location.href = "index.html"
+        });
+      }
+    }
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById("googleDiv"),
+    {
+      "theme": "outline",
+      "size": "large",
+      "type": "standard",
+      "text": "continue_with",
+      "shape": "rectangular",
+      "logo_alignment": "center"
+    }
+  );
+
+  google.accounts.id.prompt();
+
+
+
+
   /*********************FUNCTIONS AND REQUEST ************/
   function lampeggia() { //funzione per il lampeggio della freccia che porta alla scelta delle option
     let opacity = {

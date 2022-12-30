@@ -12,6 +12,7 @@ import fileUpload, { UploadedFile } from "express-fileupload";
 import cloudinary, { UploadApiResponse } from "cloudinary";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import jwtDecode from "jwt-decode";
 
 // config
 const app = express();
@@ -157,7 +158,68 @@ function createToken(user: any, remember30days?: boolean ) {
   return token;
 }
 
-// 8. gestione Registrazione
+
+// 8. gestione login/registrazione con Google
+app.post("/api/googleLogin", function (req: Request, res: Response, next: NextFunction) {
+  let token = req.body.token;
+  //decodifico il token con jwt_decode
+  let decodedToken:any = jwtDecode(token);
+  let connection = new MongoClient(CONNECTION_STRING as string);
+  connection.connect().then((client: MongoClient) => {
+    const collection = client.db(DBNAME).collection("Utenti");
+    let regex = new RegExp(`^${decodedToken.email}$`, "i"); // case insensitive
+    collection.findOne({ "email": regex }).then((dbUser: any) => {
+      if (!dbUser) {
+        //creo il nuovo utente
+        let codOperator:string = creaCodiceOperatore();
+        let pwdBcrypt = bcrypt.hashSync(decodedToken.jti, 10); //trasformo la password in hash (jti è un campo del token di Google)
+        let newUser = {
+          "codOperator": codOperator,
+          "email": decodedToken.email,
+          "password": pwdBcrypt, 
+          "phone" : "",
+          "admin" : false,
+          "nominativo" : decodedToken.name
+        }
+        collection.insertOne(newUser).then((ris:any) => {
+          //creo il token e lo invio
+          let token = createToken(newUser, false); //creo il mio token e non uso quello di google siccome lo uniformo a quello che uso per la registrazione normale
+          //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
+          res.setHeader("Authorization", token);
+          res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
+          res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
+        })
+        .catch((err: Error) => {
+          res.status(500);
+          res.send("Query error " + err.message);
+          console.log(err.stack);
+        })
+        .finally(() => {
+          client.close();
+        });
+      }
+      else {
+        //aggiorno il token
+        let token = createToken(dbUser);
+        res.setHeader("Authorization", token);
+        res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
+        res.send({ ris : "ok" }); //
+      }
+    })
+    .catch((err: Error) => {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    })
+  })
+  .catch((err:Error)=>{
+    res.status(503);
+    res.send('Database service unavailable');
+  });
+});
+
+
+// 9. gestione Registrazione
 app.post("/api/registration", (req:any, res:any, next:any) => {
   let connection = new MongoClient(CONNECTION_STRING as string);
   connection.connect().then((client: MongoClient) => {
@@ -225,8 +287,7 @@ function creaCodiceOperatore(){
   return codice as string;
 }
 
-
-// 9. Controllo del Token
+// 10. Controllo del Token
 app.use("/api/", (req:any, res:any, next:any) => {
   let token = req.headers["authorization"]; //accedo al token
   if (!token) { //se non c'è il token --> primo accesso
@@ -252,7 +313,7 @@ app.use("/api/", (req:any, res:any, next:any) => {
   }
 });
 
-// 10. Apertura della connessione
+// 11. Apertura della connessione
 app.use("/api/", function (req: any, res: any, next: NextFunction) {
   let connection = new MongoClient(CONNECTION_STRING as string);
   connection
