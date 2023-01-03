@@ -4,3 +4,4 @@ environment.json
 .env
 privateKey.pem
 .vscode
+environment.js
