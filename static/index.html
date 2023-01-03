@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,12 +16,80 @@
 
     <title>Progetto Perizie & Rilievi</title>
 </head>
-<body>
-    <h1>Benvenuto nella Home page del progetto!</h1>
 
-    <!--Pulsante di logout-->
-    <button type="button" class="btn btn-primary" id="btnLogout">Logout</button>
+<body style="background-color: #fff">
 
+    <div class="container-fluid sidebarContainer">
+        <div class="row sidebar">
+            <div class="col-sm-auto sticky-top">
+                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top">
+                    <ul
+                        class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center justify-content-between w-100 pe-3 align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip"
+                                data-bs-placement="right" data-bs-original-title="Home">
+                                <iconify-icon icon="material-symbols:home-outline-rounded" width="40"
+                                    height="40"></iconify-icon>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-original-title="Like">
+                                <iconify-icon icon="ant-design:like-outlined" width="40" height="40"></iconify-icon>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-original-title="Map">
+                                <iconify-icon icon="material-symbols:map-outline-rounded" width="40"
+                                    height="40"></iconify-icon>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-original-title="AccountHelp">
+                                <iconify-icon icon="mdi:account-help-outline" width="40" height="40"></iconify-icon>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-original-title="AccountHelp">
+                                <iconify-icon icon="material-symbols:settings-outline" width="40"
+                                    height="40"></iconify-icon>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown">
+                        <a class="d-flex align-items-center justify-content-center py-3 px-2 text-decoration-none dropdown-toggle"
+                            id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                            <iconify-icon icon="mdi:user-outline" width="40" height="40"></iconify-icon>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item">Modifica dati</a></li>
+                            <li><a class="dropdown-item" role="button" id="btnLogout">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- #region MAP SECTION-->
+    <div class="container-fluid mapContainer">
+        <div class="row">
+            <div class="col col-7">
+                
+            </div>
+            <div class="col col-5">
+                <div id="map">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #endregion MAP SECTION-->
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
@@ -31,8 +100,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
         integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        
+
     <script src="libreria.js"></script>
+    <script src="environment.js"></script>
     <script src="index.js"></script>
 </body>
+
 </html>

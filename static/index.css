@@ -125,15 +125,15 @@ body {
     line-height: 26px;
 }
 
-#googleDiv{
+#googleDiv {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-.g_id_signin * ,
-#googleDiv *{
+.g_id_signin *,
+#googleDiv * {
     background-color: transparent !important;
     color: #fff !important;
     font-family: 'Space Grotesk';
@@ -294,38 +294,105 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-input[type="checkbox"]:checked{
-    content: '\1F5F8'; /*unicode per l'immagine del checkbox*/
+input[type="checkbox"]:checked {
+    content: '\1F5F8';
+    /*unicode per l'immagine del checkbox*/
     background-color: transparent;
     border-color: #fff;
 }
 
-.container-row{
+.container-row {
     display: flex;
     flex-direction: row;
-    align-items: center;    
+    align-items: center;
     justify-content: center;
     margin-top: -30px;
 }
 
-#arrow{
+#arrow {
     background-color: transparent;
     border: none;
     color: #4D7BA5;
 }
 
-.icona-rossa{
-	color: #dc3545;  /* colore usato da is-invalid */
-	border:1px solid #dc3545; 
-	border-right:transparent;
+.icona-rossa {
+    color: #dc3545;
+    /* colore usato da is-invalid */
+    border: 1px solid #dc3545;
+    border-right: transparent;
 }
 
-.my-is-invalid{
+.my-is-invalid {
     border-color: var(--bs-danger) !important;
+}
+
+/**********SIDEBAR**********/
+.nav-item iconify-icon,
+.nav-link iconify-icon,
+.dropdown iconify-icon {
+    padding-left: 0;
+}
+
+.nav-link,
+.dropdown ,
+.dropdown-toggle{
+    transition: none !important;
+    color: #000000A6 !important;
+    cursor: pointer;
+}
+
+.active {
+    color: rgb(0, 132, 255) !important;
+    background-color: transparent !important;
+}
+
+.sidebar {
+    width: auto;
+    height: 100vh;
+    padding-left: 25px;
+}
+
+.sidebarContainer>.row {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/**************MAPCONTAINER**************/
+.mapContainer {
+    width: 90%;
+    height: 100vh;
+
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mapContainer .row > .col{
+    height: 100vh;
+    display: flex;
+    align-self: center;
+}
+
+#infoWindow { padding:0; text-align:left; }
+#infoWindow p { padding:0; margin:0}
+#infoWindow p:last-of-type {margin-bottom:10px }
+#infoWindow p span { font-weight:bold}
+
+#map{
+    width: 90%;
+    height: 95vh;
+    margin: 10px auto;		
 }
 
 /*Media query for pc (1920 x 920)*/
 @media (min-width: 1920px) {
+
     .section-login,
     #sectionLogin.section-login {
         padding-top: 13vh;
@@ -338,12 +405,12 @@ input[type="checkbox"]:checked{
         padding: 0;
     }
 
-    .section-carousel .container{
+    .section-carousel .container {
         width: 80vw;
         justify-content: center;
     }
 
-    .img-fluid{
+    .img-fluid {
         max-width: 50% !important;
     }
 
@@ -374,7 +441,7 @@ input[type="checkbox"]:checked{
         display: inline;
     }
 
-    .notLogged{
+    .notLogged {
         display: flex;
     }
 
