@@ -329,7 +329,8 @@ input[type="checkbox"]:checked {
 /**********SIDEBAR**********/
 .nav-item iconify-icon,
 .nav-link iconify-icon,
-.dropdown iconify-icon {
+.dropdown iconify-icon,
+.mapContainer iconify-icon {
     padding-left: 0;
 }
 
@@ -374,9 +375,10 @@ input[type="checkbox"]:checked {
 }
 
 .mapContainer .row > .col{
-    height: 100vh;
     display: flex;
     align-self: center;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #infoWindow { padding:0; text-align:left; }
@@ -388,6 +390,13 @@ input[type="checkbox"]:checked {
     width: 90%;
     height: 95vh;
     margin: 10px auto;		
+}
+
+.titleContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
 }
 
 /*Media query for pc (1920 x 920)*/
