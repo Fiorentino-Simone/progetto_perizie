@@ -335,8 +335,8 @@ input[type="checkbox"]:checked {
 }
 
 .nav-link,
-.dropdown ,
-.dropdown-toggle{
+.dropdown,
+.dropdown-toggle {
     transition: none !important;
     color: #000000A6 !important;
     cursor: pointer;
@@ -374,29 +374,182 @@ input[type="checkbox"]:checked {
     justify-content: center;
 }
 
-.mapContainer .row > .col{
+.mapContainer .row>.col {
     display: flex;
     align-self: center;
     flex-direction: column;
     justify-content: center;
 }
 
-#infoWindow { padding:0; text-align:left; }
-#infoWindow p { padding:0; margin:0}
-#infoWindow p:last-of-type {margin-bottom:10px }
-#infoWindow p span { font-weight:bold}
-
-#map{
-    width: 90%;
-    height: 95vh;
-    margin: 10px auto;		
+#infoWindow {
+    padding: 0;
+    text-align: left;
 }
 
-.titleContainer{
+#infoWindow p {
+    padding: 0;
+    margin: 0
+}
+
+#infoWindow p:last-of-type {
+    margin-bottom: 10px
+}
+
+#infoWindow p span {
+    font-weight: bold
+}
+
+#map {
+    width: 90%;
+    height: 95vh;
+    margin: 10px auto;
+}
+
+.titleContainer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: baseline;
+}
+
+.searchBar .btn-check:checked+.btn,
+.searchBar .btn.active,
+.searchBar .btn.show,
+.searchBar .btn:first-child:active,
+.searchBar :not(.btn-check)+.btn:active,
+.searchBar .btn:hover {
+    color: inherit !important;
+}
+
+.title {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 35px;
+    line-height: 52px;
+    text-align: center;
+    letter-spacing: -0.03em;
+    color: #000000;
+}
+
+.btnGroup {
+    display: block;
+}
+
+.btnGroup>label {
+    border-top-right-radius: inherit !important;
+    border-bottom-right-radius: inherit !important;
+    border-top-left-radius: inherit !important;
+    border-bottom-left-radius: inherit !important;
+
+    color: black;
+    background-color: #cfcaca;
+    border: transparent;
+}
+
+.button-change {
+    border: 1px solid black;
+}
+
+.orderContainer .btn:hover {
+    background-color: #cfcaca !important;
+}
+
+.orderContainer .btn-check:checked+.btn,
+.orderContainer .btn.active,
+.orderContainer .btn.show,
+.orderContainer .btn:first-child:active,
+.orderContainer :not(.btn-check)+.btn:active{
+    background-color: #4D7BA5 !important;
+    color: white !important;
+}
+
+.buttonContainer .btn:hover{
+    background-color: #cfcaca !important;
+}
+
+
+/**************dashboardAdmin**************/
+.dashboardAdmin, .periziaDetails {
+    width: 90%;
+    height: 100vh;
+
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    right: 0;
+}
+
+.dashboardAdmin > div:first-of-type,
+.periziaDetails > div:first-of-type,
+.mapContainer > div:first-of-type {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.userAdmin{
+    padding-left: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.dashboardAdmin .card{
+    text-align: center;
+}
+
+.dashboardAdmin .list-group{
+    height: 270px;
+    overflow-y: scroll;
+}
+
+.chartContainer{
+	width: 1000px;
+	height: 400px;
+	margin: 0 auto;
+	/* necessario per il funzionamento di responsive:true */
+	position:relative; 
+    cursor: zoom-in;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.containerPerizie .card{
+    cursor: pointer;
+}
+
+.periziaDetails{
+    padding-top: 20px;
+}
+
+.periziaDetails > div:first-of-type {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    --bs-gutter-x: 0 !important;
+    justify-content: flex-start;
+}
+
+.periziaDetails .col{
+    padding-top: 4rem;
+}
+
+.sidebar > div:first-of-type{
+    position: fixed;
+}
+
+.floatEnd{
+    float: right;
+}
+
+.periziaDetails input, .periziaDetails textarea{
+    width: 100%;
+}
+
+#carouselImage .carousel-caption{
+    position: static !important;
+    color : black !important;
 }
 
 /*Media query for pc (1920 x 920)*/

@@ -165,7 +165,7 @@ function createToken(user: any, remember30days?: boolean ) {
 }
 
 
-// 8. gestione login/registrazione con Google
+// 8. gestione login con google
 app.post("/api/googleLogin", function (req: Request, res: Response, next: NextFunction) {
   let token = req.body.token;
   //decodifico il token con jwt_decode
@@ -176,35 +176,9 @@ app.post("/api/googleLogin", function (req: Request, res: Response, next: NextFu
     let regex = new RegExp(`^${decodedToken.email}$`, "i"); // case insensitive
     collection.findOne({ "email": regex }).then((dbUser: any) => {
       if (!dbUser) {
-        //creo il nuovo utente
-        let codOperator:string = creaCodiceOperatore();
-        let pwdBcrypt = bcrypt.hashSync(decodedToken.jti, 10); //trasformo la password in hash (jti è un campo del token di Google)
-        let newUser = {
-          "codOperator": codOperator,
-          "email": decodedToken.email,
-          "password": pwdBcrypt, 
-          "phone" : "",
-          "admin" : false,
-          "nominativo" : decodedToken.name
-        }
-        collection.insertOne(newUser).then((ris:any) => {
-          //creo il token e lo invio
-          let token = createToken(newUser, false); //creo il mio token e non uso quello di google siccome lo uniformo a quello che uso per la registrazione normale
-          //andiamo a inviare una mail con la password generata
-          sendEmail(decodedToken.email, decodedToken.name, decodedToken.jti);
-          //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
-          res.setHeader("Authorization", token);
-          res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
-          res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
-        })
-        .catch((err: Error) => {
-          res.status(500);
-          res.send("Query error " + err.message);
-          console.log(err.stack);
-        })
-        .finally(() => {
-          client.close();
-        });
+        //per ora andiamo a dire che se non sei dentro la lista dei dipendenti non puoi entrare (per evitare che qualcuno si registri con un account google)
+        res.status(401);
+        res.send("Non sei autorizzato a registrarti");
       }
       else {
         //aggiorno il token
@@ -225,109 +199,6 @@ app.post("/api/googleLogin", function (req: Request, res: Response, next: NextFu
     res.send('Database service unavailable');
   });
 });
-
-function sendEmail(to:any, name:any, password:any) {
-  OAuth2Client.setCredentials({refresh_token: process.env.refresh_token_google});
-  const accessToken = OAuth2Client.getAccessToken();
-  const transport = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        type: 'OAuth2',
-        user : process.env.email,
-        clientId : process.env.client_id_google,
-        clientSecret : process.env.client_secret_google,
-        refreshToken : process.env.refresh_token_google,
-        accessToken : accessToken
-      }
-  });
-
-  const mailOptions = {
-      from: "Perizie & Rilievi <" + process.env.email + ">",
-      to: to,
-      subject: 'Benvento su Perizie & Rilievi',
-      html: `<h1>Benvenuto ${name}!</h1>
-      <p>La tua password è: ${password}</p>
-      <p>Per favore, non dimenticarla!</p>
-      <p>Il team di Perizie & Rilievi</p>`
-  };
-
-  transport.sendMail(mailOptions, function(error:any, info:any){
-      if (error) {
-          console.log("ERRORE INVIO MAIL : ", error);
-      } else {
-          console.log('Email sent: ' + info.response);
-      }
-  });
-}
-
-
-// 9. gestione Registrazione
-app.post("/api/registration", (req:any, res:any, next:any) => {
-  let connection = new MongoClient(CONNECTION_STRING as string);
-  connection.connect().then((client: MongoClient) => {
-    const collection = client.db(DBNAME).collection("Utenti");
-    let regex = new RegExp(`^${req.body.email}$`, "i"); // case insensitive
-    collection.findOne({ "email": regex })
-    .then((dbUser: any) => {
-      if (dbUser) {
-        res.status(401); // user o password non validi
-        res.send("User already exists");
-      } 
-      else {
-        //creo il nuovo utente
-        let codOperator:string = creaCodiceOperatore();
-        let pwdBcrypt = bcrypt.hashSync(req.body.password, 10); //trasformo la password in hash
-        let newUser = {
-          "codOperator": codOperator,
-          "email": req.body.email,
-          "password": pwdBcrypt,
-          "phone" : req.body.phone,
-          "admin" : false,
-          "nominativo" : req.body.nominativo
-        }
-        collection.insertOne(newUser).then((ris:any) => {
-          //creo il token e lo invio
-          let token = createToken(newUser, false);
-          //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
-          res.setHeader("Authorization", token);
-          res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
-          res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
-        })
-        .catch((err: Error) => {
-          res.status(500);
-          res.send("Query error " + err.message);
-          console.log(err.stack);
-        })
-        .finally(() => {
-          client.close();
-        });
-      }
-    })
-    .catch((err: Error) => {
-      res.status(500);
-      res.send("Query error " + err.message);
-      console.log(err.stack);
-    })
-  })
-  .catch((err:Error)=>{
-    res.status(503);
-    res.send('Database service unavailable');
-  });
-});
-
-function creaCodiceOperatore(){
-  //4 lettere maiuscole casuali + 4 numeri casuali
-  let codice = "";
-  for (let i = 0; i < 4; i++) {
-    let lettera = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-    codice += lettera;
-  }
-  for (let i = 0; i < 4; i++) {
-    let numero = Math.floor(Math.random() * 10);
-    codice += numero;
-  }
-  return codice as string;
-}
 
 // 10. Controllo del Token
 app.use("/api/", (req:any, res:any, next:any) => {
@@ -389,6 +260,419 @@ app.get("/api/users", (req: any, res: Response, next: NextFunction) => {
   });
 });
 
+app.post("/api/perizie", (req:any, res:Response, next:NextFunction) => {
+  let ordering = req.body.ordering;
+  let codOperator = req.body.codOperator;
+  let querySort:any = {};
+  let query:any = {};
+  if(ordering == null) querySort = {};
+  else{
+    for (const item of ordering) {
+      if(item != "distance") querySort[item] = -1;
+    }
+  }
+  console.log(querySort);
+  if(codOperator != null) query = {codOperator: codOperator};
+  else query = {};
+  console.log(query);
+  let collection = req["connessione"].db(DBNAME).collection("Rilievi");
+  collection.find(query).sort(querySort).toArray((err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
+})
+
+app.get("/api/operators", (req:any, res:Response, next:NextFunction) => {
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  collection.find({}).toArray((err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
+})
+
+app.get("/api/checkAdmin", (req:any, res:Response, next:NextFunction) => {
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  let user = req["payload"];
+  console.log(user);
+  let id = new ObjectId(user._id);
+  collection.findOne({_id: id}, (err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
+})
+
+app.get("/api/totDipendenti", (req:any, res:Response, next:NextFunction) => {
+  //count del numero di tutti gli utenti
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  collection.countDocuments({}, (err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(JSON.stringify(result));
+    }
+    req["connessione"].close();
+  });
+})
+
+app.get("/api/totPerizieSettimanali", (req:any, res:Response, next:NextFunction) => {
+  //send le perizie fatte in una settimana
+  let collection = req["connessione"].db(DBNAME).collection("Rilievi");
+  //usare la gestione della data in questo formato: YYYY-MM-DD
+  let today = new Date();
+  let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  let date = new Date(lastWeek),
+  mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+  day = ("0" + date.getDate()).slice(-2);
+  let dateQuery = [date.getFullYear(), mnth, day].join("-");
+  collection.countDocuments({dateAdded: {$gte: dateQuery}}, (err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(JSON.stringify(result));
+    }
+    req["connessione"].close();
+  });
+})
+
+app.get("/api/mediaValutazioniPerizie", (req:any, res:Response, next:NextFunction) => {
+  //send la media delle valutazioni delle perizie
+  let collection = req["connessione"].db(DBNAME).collection("Rilievi");
+  collection.aggregate([
+    {$group: {_id: null, media: {$avg: "$score"}}}
+  ]).toArray((err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
+})
+
+app.post("/api/getInformationDipendente", (req:any, res:Response, next:NextFunction) => {
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  let codOperator = req.body.operator;
+  collection.findOne({codOperator: codOperator}, 
+    { projection: { _id: 0, password: 0 } },
+    (err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
+})
+
+app.post("/api/getChart", (req:any, res:Response, next:NextFunction) => {
+  let collection = req["connessione"].db(DBNAME).collection("Rilievi");
+  let codOperator = req.body.operator;
+  collection.find({codOperator: codOperator}).toArray((err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack); 
+    } else {
+      //set an array label with the date of the perizie
+      let label = [];
+      let data = [];
+      let backgroundColor = [];
+      for (let i = 0; i < result.length; i++) {
+        label.push(result[i].dateAdded);
+        data.push(result[i].score);
+        backgroundColor.push(generaColore());
+      }
+      let chart = {
+        label: label,
+        data: data,
+        backgroundColor: backgroundColor
+      }
+      res.send(chart);
+    }
+    req["connessione"].close();
+  });
+})
+
+
+app.post("/api/editDipendente", (req:any, res:Response, next:NextFunction) => {
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  let codOperator = req.body.data.codOperator;
+  collection.replaceOne(
+    {codOperator: codOperator},
+    req.body.data,
+    (err:any, result:any) => {
+      if (err) {
+        res.status(500);
+        res.send("Query error " + err.message);
+        console.log(err.stack);
+      } else {
+        res.send(result);
+      }
+      req["connessione"].close();
+    }
+  )
+})
+
+app.post("/api/searchPerizie", (req:any, res:any, next:any) => {
+  let searchInput = req.body.search; 
+  let codOperator = req.body.codOperator;
+  //match a title or a description with includes the searchInput, case insensitive, with the codOperator condition
+  let collection = req["connessione"].db(DBNAME).collection("Rilievi");
+  collection.find({$and: [
+    {codOperator: codOperator},
+    {$or: [
+      {title: {$regex: searchInput, $options: "i"}},
+      {description: {$regex: searchInput, $options: "i"}}
+    ]}
+  ]}).toArray((err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
+});
+
+app.post("/api/filterPerizie", (req:any, res:any, next:any) => {
+  let filter = req.body.parameters;
+  console.log(filter)
+  let collection = req["connessione"].db(DBNAME).collection("Rilievi");
+  collection.find(filter, {projection: {_id: 0}}).toArray((err:any, result:any) => {
+    if (err) {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    } else {
+      res.send(result);
+    }
+    req["connessione"].close();
+  });
+})
+
+app.patch("/api/editPerizia", (req:any, res:any, next:any) => {
+  let collection = req["connessione"].db(DBNAME).collection("Rilievi");
+  let id = req.body.id;
+  let editValues = req.body.parameters;
+  console.log("editValues: ", editValues)
+  collection.updateOne(
+    {_id: new ObjectId(id)},
+    {$set:
+      editValues
+    },
+    (err:any, result:any) => {
+      if (err) {
+        res.status(500);
+        res.send("Query error " + err.message);
+        console.log(err.stack);
+      } else {
+        res.send(result);
+      }
+      req["connessione"].close();
+    }
+  )
+})
+
+app.post("/api/deleteDipendente", (req:any, res:any, next:any) => {
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  let codOperator = req.body.operator;
+  collection.deleteOne
+    ({codOperator: codOperator}, 
+      (err:any, result:any) => {
+        if (err) {
+          res.status(500);
+          res.send("Query error " + err.message);
+          console.log(err.stack);
+        } else {
+          res.send(result);
+        }
+        req["connessione"].close();
+      }
+    )
+})
+
+app.post("/api/likedPerizia", (req:any, res:any, next:any) => {
+  let idPerizia = req.body.idPerizia;
+  let codOperator = req.body.codOperator;
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  collection.updateOne(
+    {codOperator: codOperator},
+    {$push: {likedPerizie: idPerizia}},
+    (err:any, result:any) => {
+      if (err) {
+        res.status(500);
+        res.send("Query error " + err.message);
+        console.log(err.stack);
+      } else {
+        res.send(result);
+      }
+      req["connessione"].close();
+    }
+  )
+})
+
+app.post("/api/dislikedPerizia", (req:any, res:any, next:any) => {
+  let idPerizia = req.body.idPerizia;
+  let codOperator = req.body.codOperator;
+  let collection = req["connessione"].db(DBNAME).collection("Utenti");
+  collection.updateOne(
+    {codOperator: codOperator},
+    {$pull: {likedPerizie: idPerizia}},
+    (err:any, result:any) => {
+      if (err) {
+        res.status(500);
+        res.send("Query error " + err.message);
+        console.log(err.stack);
+      } else {
+        res.send(result);
+      }
+      req["connessione"].close();
+    }
+  )
+})
+
+app.post("/api/googleRegistration", function (req: Request, res: Response, next: NextFunction) {
+  let token = req.body.token;
+  //decodifico il token con jwt_decode
+  let decodedToken:any = jwtDecode(token);
+  let connection = new MongoClient(CONNECTION_STRING as string);
+  connection.connect().then((client: MongoClient) => {
+    const collection = client.db(DBNAME).collection("Utenti");
+    let regex = new RegExp(`^${decodedToken.email}$`, "i"); // case insensitive
+    collection.findOne({ "email": regex }).then((dbUser: any) => {
+      if (!dbUser) {
+        //creo il nuovo utente
+        let codOperator:string = creaCodiceOperatore();
+        let pwdBcrypt = bcrypt.hashSync(decodedToken.jti, 10); //trasformo la password in hash (jti è un campo del token di Google)
+        let newUser = {
+          "codOperator": codOperator,
+          "email": decodedToken.email,
+          "password": pwdBcrypt, 
+          "phone" : "",
+          "admin" : false,
+          "nominativo" : decodedToken.name,
+          "imageUtente" : decodedToken.picture,
+        }
+        collection.insertOne(newUser).then((ris:any) => {
+          //creo il token e lo invio
+          let token = createToken(newUser, false); //creo il mio token e non uso quello di google siccome lo uniformo a quello che uso per la registrazione normale
+          //andiamo a inviare una mail con la password generata
+          sendEmail(decodedToken.email, decodedToken.name, decodedToken.jti);
+          //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
+          res.setHeader("Authorization", token);
+          res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
+          res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
+        })
+        .catch((err: Error) => {
+          res.status(500);
+          res.send("Query error " + err.message);
+          console.log(err.stack);
+        })
+        .finally(() => {
+          client.close();
+        });
+      }
+      else {
+        //aggiorno il token
+        let token = createToken(dbUser);
+        res.setHeader("Authorization", token);
+        res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
+        res.send({ ris : "ok" }); //
+      }
+    })
+    .catch((err: Error) => {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    })
+  })
+  .catch((err:Error)=>{
+    res.status(503);
+    res.send('Database service unavailable');
+  });
+});
+
+app.post("/api/registration", (req:any, res:any, next:any) => {
+  let connection = new MongoClient(CONNECTION_STRING as string);
+  connection.connect().then((client: MongoClient) => {
+    const collection = client.db(DBNAME).collection("Utenti");
+    let regex = new RegExp(`^${req.body.email}$`, "i"); // case insensitive
+    collection.findOne({ "email": regex })
+    .then((dbUser: any) => {
+      if (dbUser) {
+        res.status(401); // user o password non validi
+        res.send("User already exists");
+      } 
+      else {
+        //creo il nuovo utente
+        let codOperator:string = creaCodiceOperatore();
+        let pwdBcrypt = bcrypt.hashSync(req.body.password, 10); //trasformo la password in hash
+        let newUser = {
+          "codOperator": codOperator,
+          "email": req.body.email,
+          "password": pwdBcrypt,
+          "phone" : req.body.phone,
+          "admin" : false,
+          "nominativo" : req.body.nominativo
+        }
+        collection.insertOne(newUser).then((ris:any) => {
+          //creo il token e lo invio
+          let token = createToken(newUser, false);
+          //inseriamo il token o nei cookie o nel HTTP header authorization (scelta preferita)
+          res.setHeader("Authorization", token);
+          res.setHeader("Access-Control-Expose-Headers", "Authorization") //per far vedere il token al client (extra-domain, esempio sito web e app in dominio diverso)
+          res.send({ ris : "ok" }); //il client riceve il token dall'intestazione (sia il codice 200 che il token)
+        })
+        .catch((err: Error) => {
+          res.status(500);
+          res.send("Query error " + err.message);
+          console.log(err.stack);
+        })
+        .finally(() => {
+          client.close();
+        });
+      }
+    })
+    .catch((err: Error) => {
+      res.status(500);
+      res.send("Query error " + err.message);
+      console.log(err.stack);
+    })
+  })
+  .catch((err:Error)=>{
+    res.status(503);
+    res.send('Database service unavailable');
+  });
+});
+
 /* ********************** (Sezione 4) DEFAULT ROUTE  ************************* */
 // Default route
 app.use("/", function (req: any, res: any, next: NextFunction) {
@@ -406,3 +690,66 @@ app.use("/", (err: any, req: any, res: any, next: any) => {
   res.send("ERRR: " + err.message);
   console.log("SERVER ERROR " + err.stack);
 });
+
+
+/*********************** HELPED FUNCTIONS ****************************************/
+function generaColore(){
+  let R = generaNumero(0, 255);
+  let G = generaNumero(0, 255);
+  let B = generaNumero(0, 255);
+  return (`rgba(${R}, ${G}, ${B}, 0.8)`);
+}
+
+
+function generaNumero(a:any, b:any){
+	return Math.floor((b-a+1)*Math.random()) + a;
+}
+
+function sendEmail(to:any, name:any, password:any) {
+  OAuth2Client.setCredentials({refresh_token: process.env.refresh_token_google});
+  const accessToken = OAuth2Client.getAccessToken();
+  const transport = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user : process.env.email,
+        clientId : process.env.client_id_google,
+        clientSecret : process.env.client_secret_google,
+        refreshToken : process.env.refresh_token_google,
+        accessToken : accessToken
+      }
+  });
+
+  const mailOptions = {
+      from: "Perizie & Rilievi <" + process.env.email + ">",
+      to: to,
+      subject: 'Benvento su Perizie & Rilievi',
+      html: `<h1>Benvenuto ${name}!</h1>
+      <p>La tua password è: ${password}</p>
+      <p>Per favore, non dimenticarla!</p>
+      <p>Il team di Perizie & Rilievi</p>`
+  };
+
+  transport.sendMail(mailOptions, function(error:any, info:any){
+      if (error) {
+          console.log("ERRORE INVIO MAIL : ", error);
+      } else {
+          console.log('Email sent: ' + info.response);
+      }
+  });
+}
+
+
+function creaCodiceOperatore(){
+  //4 lettere maiuscole casuali + 4 numeri casuali
+  let codice = "";
+  for (let i = 0; i < 4; i++) {
+    let lettera = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    codice += lettera;
+  }
+  for (let i = 0; i < 4; i++) {
+    let numero = Math.floor(Math.random() * 10);
+    codice += numero;
+  }
+  return codice as string;
+}

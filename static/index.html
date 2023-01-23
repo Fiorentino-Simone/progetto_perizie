@@ -22,9 +22,9 @@
 
     <div class="container-fluid sidebarContainer">
         <div class="row sidebar">
-            <div class="col-sm-auto sticky-top">
+            <div class="col-sm-auto"  style="z-index: 2;">
                 <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top">
-                    <ul
+                    <ul id="navBar"
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center justify-content-between w-100 pe-3 align-items-center">
                         <li class="nav-item">
                             <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
@@ -34,13 +34,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
+                            <a class="nav-link py-3 px-2" title="" id="likedSection" data-bs-toggle="tooltip" data-bs-placement="right"
                                 data-bs-original-title="Like">
                                 <iconify-icon icon="ant-design:like-outlined" width="40" height="40"></iconify-icon>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active py-3 px-2" title="" data-bs-toggle="tooltip"
+                            <a class="nav-link active py-3 px-2" title="" id="mapSection" data-bs-toggle="tooltip"
                                 data-bs-placement="right" data-bs-original-title="Map">
                                 <iconify-icon icon="material-symbols:map-outline-rounded" width="40"
                                     height="40"></iconify-icon>
@@ -52,20 +52,13 @@
                                 <iconify-icon icon="mdi:account-help-outline" width="40" height="40"></iconify-icon>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
-                                data-bs-original-title="AccountHelp">
-                                <iconify-icon icon="material-symbols:settings-outline" width="40"
-                                    height="40"></iconify-icon>
-                            </a>
-                        </li>
                     </ul>
                     <div class="dropdown">
                         <a class="d-flex align-items-center justify-content-center py-3 px-2 text-decoration-none dropdown-toggle"
                             id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                             <iconify-icon icon="mdi:user-outline" width="40" height="40"></iconify-icon>
                         </a>
-                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser">
+                        <ul class="dropdown-menu text-small shadow"  aria-labelledby="dropdownUser">
                             <li><a class="dropdown-item">Modifica dati</a></li>
                             <li><a class="dropdown-item" role="button" id="btnLogout">Logout</a></li>
                         </ul>
@@ -85,7 +78,7 @@
                     <div class="small fw-light"></div> <!--testo sopra l'input se serve-->
                     <div class="input-group">
                         <input class="form-control border-end-0 border rounded-pill" type="search" value="search"
-                            id="example-search-input">
+                            id="search-input">
                         <span class="input-group-append">
                             <button id="btnSearch"
                                 class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5"
@@ -101,113 +94,33 @@
                     </div>
                 </div>
                 <div class="orderContainer mt-3">
-                    <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                        <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btncheck1">Order 1</label>
+                    <div class="btn-group btnGroup" role="group" aria-label="Basic checkbox toggle button group">
+                        <input type="checkbox" value="dateAdded" class="btn-check" id="btnData" autocomplete="off">
+                        <label class="btn" for="btnData">Data</label>
 
-                        <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btncheck2">Order 2</label>
+                        <input type="checkbox" value="distance" class="btn-check" id="btnDistanza" autocomplete="off">
+                        <label class="btn" for="btnDistanza">Distanza</label>
 
-                        <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btncheck3">Order 1</label>
+                        <input type="checkbox" value="score" class="btn-check" id="btnValutazioni" autocomplete="off">
+                        <label class="btn" for="btnValutazioni">Valutazioni (dal più valutato al meno)</label>
                     </div>
                 </div>
                 <div class="titleContainer mt-3">
                     <div class="d-flex align-items-baseline">
                         <h1 class="title">Perizie</h1>
-                        <h6 class="mx-3 results">240 risultati</h6>
+                        <h6 class="mx-3 results"></h6>
                     </div>
                     <div class="buttonContainer">
-                        <button type="button" class="btn btn-outline-dark bi bi-chevron-left button-change"
-                            id="Previous"></button>
-                        <button type="button" class="btn btn-outline-dark bi bi-chevron-right button-change"
-                            id="Next"></button>
+                        <button type="button" class="btn bi bi-chevron-left button-change" id="Previous"></button>
+                        <button type="button" class="btn bi bi-chevron-right button-change" id="Next"></button>
                     </div>
                 </div>
 
                 <div class="cardContainer">
-                    <div class="row row-cols-1 row-cols-md-12">
-                        <div class="col">
-                            <div class="card mb-3">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                        <img src="https://www.finasrl.it/wp-content/uploads/2015/12/img-test.jpg" class="img-fluid rounded-start" alt="testImage">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-baseline justify-content-between">
-                                                <h5 class="card-title">Titolo della perizia</h5>    
-                                                <div class="containerOfSettings d-flex justify-content-end">
-                                                    <button class="btn">
-                                                        <iconify-icon icon="mdi:heart-outline" width="20" height="20"></iconify-icon>
-                                                    </button>
-                                                    <button class="btn">
-                                                        <iconify-icon icon="mdi:settings-outline" width="20" height="20"></iconify-icon>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="containerOrders d-flex">
-                                                <p>Casa </p>
-                                                <p class="px-3">Casa</p>
-                                                <p>Casa</p>
-                                            </div>
-                                            <p class="card-text">Descrizione della perizia</p>
-                                            <div class="scoreAndAuthor d-flex justify-content-between">
-                                                <p class="card-text">
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                </p>
-                                                <p class="card-text"><small class="text-muted">By Simone</small></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card mb-3">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                        <img src="https://www.finasrl.it/wp-content/uploads/2015/12/img-test.jpg" class="img-fluid rounded-start" alt="testImage">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-baseline justify-content-between">
-                                                <h5 class="card-title">Titolo della perizia</h5>    
-                                                <div class="containerOfSettings d-flex justify-content-end">
-                                                    <button class="btn">
-                                                        <iconify-icon icon="mdi:heart-outline" width="20" height="20"></iconify-icon>
-                                                    </button>
-                                                    <button class="btn">
-                                                        <iconify-icon icon="mdi:settings-outline" width="20" height="20"></iconify-icon>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="containerOrders d-flex">
-                                                <p>Casa </p>
-                                                <p class="px-3">Casa</p>
-                                                <p>Casa</p>
-                                            </div>
-                                            <p class="card-text">Descrizione della perizia</p>
-                                            <div class="scoreAndAuthor d-flex justify-content-between">
-                                                <p class="card-text">
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                    <iconify-icon icon="mdi:star" width="20" height="20"></iconify-icon>
-                                                </p>
-                                                <p class="card-text"><small class="text-muted">By Simone</small></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="row row-cols-1 row-cols-md-12 containerPerizie">
                     </div>
+                    <!--page indicator-->
+                    <p class="numberPagination" style="text-align: center;"></p>
                 </div>
             </div>
             <!--https://www.codeply.com/p/jYwDonANZl#-->
@@ -220,6 +133,344 @@
 
     <!-- #endregion MAP SECTION-->
 
+
+    <!-- #region ADMIN DASHBORD-->
+    <div class="container-fluid dashboardAdmin d-none">
+        <div class="d-flex" style="padding: 20px">
+            <button type="button" class="btn position-relative">
+                <iconify-icon icon="ph:bell-bold" width="30" height="30"></iconify-icon>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    99+
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            </button>
+            <div class="userAdmin">
+                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar"
+                    class="avatar rounded-pill img-fluid" width="50" height="50">
+                <div class="d-grid" style="padding-left: 10px;">
+                    <h5 class="fw-bold">Nome Cognome</h5>
+                    <h6 class="fw-light">Admin</h6>
+                </div>
+            </div>
+        </div>
+
+        <h1>Dashboard</h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4 pt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Dipendenti</h5>
+                        <p class="card-text totDipendenti">numero dei dipendenti</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Totale perizie settimanali</h5>
+                        <p class="card-text totPerizieSettimanali">numero totale perizie settimanali</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Media valutazioni perizie</h5>
+                        <p class="card-text valutazioniPerizieTotali">media delle valutazioni</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="pt-4">Overview</h1>
+        <div class="row row-cols-1 row-cols-md-2 g-4 pt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Lista Dipendenti</h5>
+                        <div class="list-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <h5 class="card-title">Dettagli del dipendenti</h5>
+                            <iconify-icon icon="material-symbols:edit-outline" id="editValues" width="25"
+                                height="25"></iconify-icon>
+                            <iconify-icon icon="material-symbols:delete-outline" id="deleteUtente" width="25"
+                                height="25"></iconify-icon>
+                        </div>
+                        <div>
+                            <div class="mb-3 row">
+                                <label for="codOperator" class="col-sm-4 col-form-label">Codice Operatore</label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly class="form-control-plaintext valuesOperator"
+                                        id="codOperator" value="">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="email" class="col-sm-4 col-form-label">Email</label>
+                                <div class="col-sm-6">
+                                    <input type="email" readonly class="form-control-plaintext valuesOperator"
+                                        id="email" value="">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="phone" class="col-sm-4 col-form-label">Telefono</label>
+                                <div class="col-sm-6">
+                                    <input type="tel" readonly class="form-control-plaintext valuesOperator" id="phone"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="admin" class="col-sm-4 col-form-label">Admin</label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly class="form-control-plaintext valuesOperator" id="admin"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="nominativo" class="col-sm-4 col-form-label">Nominativo</label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly class="form-control-plaintext valuesOperator"
+                                        id="nominativo" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttonContainer">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chartContainer">
+            <canvas id="chartPerizie"></canvas>
+        </div>
+
+
+        <h1>Aggiungi nuovo utente</h1>
+        <br>
+        <h5 style="padding-bottom: 20px;">
+            Per aggiungere un nuovo utente andare utilizzare la pagina di
+            <a href="registration.html">registrazione</a>
+        </h5>
+    </div>
+
+    <!-- #endregion ADMIN DASHBORD-->
+
+
+    <!-- #region SHOW PERIZIA DETAILS -->
+    <div class="periziaDetails d-none">
+        <div class="row">
+            <div class="d-flex" style="padding-left: 30%">
+                <h1 class="card-title">Dettagli della perizia</h1>
+            </div>
+            <div class="col col-5">
+                <div id="carouselImage" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+
+                    </div>
+
+                    <!-- Left and right controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselImage"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselImage"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col col-6" style="padding-left: 2rem;">
+                <div class="floatEnd">
+                    <iconify-icon icon="material-symbols:edit-outline" id="editValuesPerizia" width="35"
+                        height="35"></iconify-icon>
+                    <iconify-icon icon="tabler:arrow-back" id="btnBack" width="35" height="35"></iconify-icon>
+                </div>
+                <div class="card" style="border: none;">
+                    <div class="card-body" style="padding: 0;">
+                        <div class="mb-3 row">
+                            <h1 for="titlePerizia" class="col-sm-4 col-form-label">Titolo della perizia: </h1>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control-plaintext titlePerizia"
+                                    id="titlePerizia" value="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <h1 for="descriptionPerizia" class="col-sm-4 col-form-label">Descrizione della perizia:
+                            </h1>
+                            <div class="col-sm-6">
+                                <textarea type="text" readonly class="form-control-plaintext descriptionPerizia"
+                                    id="descriptionPerizia" value=""></textarea>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <h1 for="scorePerizia" class="col-sm-4 col-form-label">Valutazione assegnata: </h1>
+                            <div class="col-sm-6">
+                                <p class="scorePerizia"></p>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <h1 for="placePerizia" class="col-sm-4 col-form-label">Perizia effettuata al: </h1>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control-plaintext placePerizia"
+                                    id="placePerizia" value="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <h1 for="datePerizia" class="col-sm-4 col-form-label">Perizia effettuata nel: </h1>
+                            <div class="col-sm-6">
+                                <input type="date" readonly class="form-control-plaintext datePerizia" id="datePerizia"
+                                    value="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <h1 for="completedPerizia" class="col-sm-4 col-form-label">Completato: </h1>
+                            <div class="col-sm-6">
+                                <input type="checkbox" disabled style="display: inline-block;"
+                                    class="form-control-plaintext completedPerizia" id="completedPerizia" value="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <h1 for="validatedPerizia" class="col-sm-4 col-form-label">Validato: </h1>
+                            <div class="col-sm-6">
+                                <input type="checkbox" disabled style="display: inline-block;"
+                                    class="form-control-plaintext validatedPerizia" id="validatedPerizia" value="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <h1 for="authorPerizia" class="col-sm-4 col-form-label">Autore della perizia: </h1>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control-plaintext authorPerizia"
+                                    id="authorPerizia" value="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row d-none containerCommentPerizia">
+                            <h1 for="commentoPerizia" class="col-sm-4 col-form-label">Commento da parte del
+                                supervisionatore: </h1>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control-plaintext commentoPerizia"
+                                    id="commentoPerizia" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="containerSaveEditPerizia d-flex justify-content-center">
+
+                </div>
+            </div>
+
+            <h1 style="padding-bottom: 20px">Visualizza nella mappa</h1>
+            <div class="d-flex justify-content-between" style="margin-bottom: 3rem;">
+                <div class="d-inline-block" id="mapPerizia" style="width: 70%; height: 400px;"></div>
+                <div class="d-inline-block" id="panelPerizia" style="width: 25%; height: 400px; overflow: auto;"></div>
+            </div>
+            <br>
+        </div>
+    </div>
+
+
+    <!-- #endregion SHOW PERIZIA DETAILS-->
+
+
+    <!-- #region MODALS FILTER -->
+    <div class="modal fade" id="modalFilter" tabindex="-1" aria-labelledby="label" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="label">Gestione dei filtri sulle perizie</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!--filter sull'utente: selezione da una select il nome dell'utente -->
+                    <div class="mb-3 row d-none" id="filterUserContainer">
+                        <label for="filterUser" class="col-sm-4 col-form-label">Filtro sull'utente</label>
+                        <div class="col-sm-6">
+                            <select class="form-select" id="filterUser">
+                            </select>
+                        </div>
+                    </div>
+                    <!--filter sulla posizione: inserisco un indirizzo da un input box-->
+                    <div class="mb-3 row">
+                        <label for="filterPlace" class="col-sm-4 col-form-label">Filtro sulla posizione</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="filterPlace" value="">
+                        </div>
+                    </div>
+                    <!--filter sulla data: inserisco un range di date-->
+                    <div class="mb-3 row">
+                        <label for="filterDate" class="col-sm-4 col-form-label">Filtro sulla data</label>
+                        <div class="col-sm-6">
+                            <input type="date" class="form-control" id="filterDate" value="">
+                        </div>
+                    </div>
+                    <!--filter sulla valutazione: selezione del numero di stelle (da 1 a 5)-->
+                    <div class="mb-3 row">
+                        <label for="filterScore" class="col-sm-4 col-form-label">Filtro sulla valutazione</label>
+                        <div class="col-sm-6">
+                            <input type="number" min="1" max="5" class="form-control" id="filterScore" value="">
+                        </div>
+                    </div>
+                    <!--filter sul completamento: selezione di due radios per completato/non completato-->
+                    <div class="mb-3 row">
+                        <label for="filterCompleted" class="col-sm-4 col-form-label">Filtro sul completamento</label>
+                        <div class="col-sm-6">
+                            <!---radios-->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radiosCompleted" id="radioCompleted">
+                                <label class="form-check-label" for="radioCompleted">
+                                    Completato
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radiosCompleted"
+                                    id="radioNotCompleted">
+                                <label class="form-check-label" for="radioNotCompleted">
+                                    Non completato
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!--filter sulla validazione: selezione di un checkbox-->
+                    <div class="mb-3 row">
+                        <label for="filterValidated" class="col-sm-4 col-form-label">Filtro sulla validazione</label>
+                        <div class="col-sm-6">
+                            <!---radios-->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radiosValidation"
+                                    id="radioValidated">
+                                <label class="form-check-label" for="radioValidated">
+                                    Validato
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radiosValidation"
+                                    id="radioNotValidated">
+                                <label class="form-check-label" for="radioNotValidated">
+                                    Non validato
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnRemoveFilter" class="btn btn-secondary">Annulla filtri</button>
+                    <button type="button" id="btnFilterPerizie" class="btn btn-primary">Applica filtri</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #endregion MODALS FILTER-->
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
@@ -229,7 +480,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
         integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.7/sweetalert2.all.min.js"></script>
     <script src="libreria.js"></script>
     <script src="environment.js"></script>
     <script src="index.js"></script>
