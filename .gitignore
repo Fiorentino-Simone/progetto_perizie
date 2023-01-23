@@ -5,3 +5,6 @@ environment.json
 privateKey.pem
 .vscode
 environment.js
+
+.elasticbeanstalk/
+DB
