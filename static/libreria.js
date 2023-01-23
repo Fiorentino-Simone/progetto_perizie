@@ -31,6 +31,15 @@ function inviaRichiesta(method, url, parameters = {}) {
 }
 
 
+function erroreSweetAlert(errorMessage){
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: errorMessage,
+        footer: '<a href="#Contattami">Se riscontri problematiche, contattami !</a>'
+    })
+}
+
 
 function errore(jqXHR, testStatus, strError) {
 	if (jqXHR.status == 0)
