@@ -27,7 +27,11 @@ $(document).ready(function () {
         let request = inviaRichiesta("POST", "/api/googleLogin", {
           token: response.credential
         });
-        request.fail(errore);
+        request.fail(function (jqXHR, test_status, str_error) {
+          if (jqXHR.status == 401) {
+            alert("Non sei autorizzato ad accedere, contatta l'amministratore");
+          }else errore(jqXHR, test_status, str_error);
+        });
         request.done(function (data, test_status, jqXHR) {
           console.log(jqXHR.getResponseHeader('Authorization')) //prendiamo il token			
           window.location.href = "index.html"
@@ -93,7 +97,12 @@ $(document).ready(function () {
       request.fail(function (jqXHR, test_status, str_error) {
         if (jqXHR.status == 401) {
           // unauthorized
-          alert("Credenziali errate");
+          Swal.fire({
+            title: "Errore",
+            text: "Credenziali errate",
+            icon: "error",
+            confirmButtonText: "Ok"
+          });
         } else errore(jqXHR, test_status, str_error);
       });
       request.done(function (data, test_status, jqXHR) {

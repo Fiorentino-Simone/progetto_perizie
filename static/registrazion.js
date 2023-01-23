@@ -22,13 +22,19 @@ $(document).ready(function () {
     if ($(window).width() < 768)
         lampeggia();
 
+    let request = inviaRichiesta("GET", "/api/users");
+    request.fail(errore);
+    request.done(function (data) {
+        console.log(data);
+    });
+    
 
     /*global google*/
     google.accounts.id.initialize({
         "client_id": "426153637541-f66k37cc793jejdbg1llisk75kbfckt2.apps.googleusercontent.com",
         "callback": function (response) {
             if (response.credential !== "") {
-                let request = inviaRichiesta("POST", "/api/googleLogin", {
+                let request = inviaRichiesta("POST", "/api/googleRegistration", {
                     token: response.credential
                 });
                 request.fail(errore);
