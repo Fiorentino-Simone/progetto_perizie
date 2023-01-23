@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src *;
+        script-src * 'unsafe-inline';
+        style-src * 'unsafe-inline';
+        img-src 'self' data: content:; ">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="index.css">
+    <title>Registrazione Perizie & Rilievi</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="section-carousel">
+            <div class="container">
+                <img src="img/graphics.jpg" alt="graphics" class="img-fluid img">
+                <div class="description-carousel">
+                    <p>Gestione delle perizie</p>
+                    <p>con la nuova interfaccia utente sarà possibile avere una gestione delle tue perizie in tempo
+                        reale</p>
+                </div>
+            </div>
+            <div class="container-row">
+                <a class="d-lg-none d-xl-none d-xxl-none
+                    d-sm-block  d-md-block" href="#registrationLogin">
+                    <i class="fa-solid fa-arrow-down fa-3x" id="arrow"></i>
+                </a>
+            </div>
+        </div>
+
+        <div id="registrationLogin" class="section-login">
+            <!--<div class="container-logo">
+                <p>Logo of the brand</p>
+            </div>-->
+
+            <div class="container-login">
+                <div class="container">
+                    <p>Crea un nuovo account </p>
+                    <p>Inserisci i tuoi dati per completare la registrazione</p>
+                    <div id="googleDiv"></div>
+                    <div class="or-section">
+                        <p></p>
+                        <p>or</p>
+                        <p></p>
+                    </div>
+                    <div class="wrapper-login">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <iconify-icon icon="mdi:user-outline" width="20" height="20"></iconify-icon>
+                                <p></p>
+                            </span>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtNominativo" placeholder="Nominativo">
+                                <label for="txtNominativo">Nominativo</label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <iconify-icon icon="ic:outline-email" width="20" height="20"></iconify-icon>
+                                <p></p>
+                            </span>
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="txtEmail" placeholder="Email">
+                                <label for="txtEmail">Email</label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <iconify-icon icon="mdi:password-outline" width="20" height="20">
+                                </iconify-icon>
+                                <p></p>
+                            </span>
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="txtPassword" placeholder="Email">
+                                <label for="txtPassword">Password</label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <iconify-icon icon="ph:phone" width="20" height="20"></iconify-icon>
+                                <p></p>
+                            </span>
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="txtTel" placeholder="Telefono">
+                                <label for="txtTel">Telefono</label>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnRegistration" class="btn">Registrati</button>
+                        <div class="settings-login notLogged">
+                            <p>Hai un account?</p>
+                            <a href="./index.html">Login</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+        integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script src="libreria.js"></script>
+    <script src="cordova.js"></script>
+    <script src="registrazion.js"></script>
+
+</body>
+
+</html>

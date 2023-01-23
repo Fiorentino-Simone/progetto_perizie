@@ -2,6 +2,7 @@
 
 // import
 import http from "http";
+import https from "https";
 import fs from "fs";
 import express from "express"; // @types/express
 import { Request, Response, NextFunction } from "express";
@@ -21,26 +22,54 @@ const nodemailer = require("nodemailer");
 // config
 const app = express();
 const HTTP_PORT = process.env.PORT || 1337;
+const HTTPS_PORT = 1338;
 dotenv.config({ path: ".env" });
 const DBNAME = "ProgettoPerizie";
 const CONNECTION_STRING = process.env.connectionString;
 cloudinary.v2.config(JSON.parse(process.env.cloudinary as string));
-const corsOptions = {
-  origin: function (origin: any, callback: any) {
-    return callback(null, true);
-  },
-  credentials: true,
-};
-const privateKey:string = process.env.PRIVATE_KEY as string;
+
 const DURATA_TOKEN = 3600; // offset in secondi rispetto alla data corrente dove poi mi richiederà di fare il login
 const OAuth2 = google.auth.OAuth2;
 const OAuth2Client = new OAuth2(process.env.client_id_google, process.env.client_secret_google);
 
+//gestione CORS
+const privateKey:string = process.env.PRIVATE_KEY as string;
+const certificate = fs.readFileSync("keys/certificate.crt", "utf8");
+const privateKeyCert = fs.readFileSync("keys/privateKey.pem", "utf8");
+const credentials = { key: privateKeyCert, cert: certificate };
+
+const whitelist = [ 
+  "http://my-crud-server.herokuapp.com ", //inserire il nostro sito pubblicato su render/heroku
+  "https://my-crud-server.herokuapp.com ",
+  "http://localhost:1337",
+  "https://localhost:1338",
+  "https://192.168.1.29:1338",
+  "https://cordovaapp",
+  "http://localhost:4200"
+];
+
+const corsOptions = { 
+  origin: function(origin:any, callback:any) {
+    if (!origin)      
+      return callback(null, true);   
+    if (whitelist.indexOf(origin) === -1) { 
+      var msg = `The CORS policy for this site does not  allow access from the specified Origin.` 
+      return callback(new Error(msg), false); 
+    }  
+    else return callback(null, true); 
+  }, 
+  credentials: true 
+}; 
+
 // ***************************** Avvio ****************************************
-const httpServer = http.createServer(app);
-httpServer.listen(HTTP_PORT, function () {
-  init();
-  console.log("Server HTTP in ascolto sulla porta " + HTTP_PORT);
+let httpServer = http.createServer(app);
+httpServer.listen(HTTP_PORT, () => {
+    init();
+});
+
+let httpsServer = https.createServer(credentials, app);
+httpsServer.listen(HTTPS_PORT, function(){
+	console.log("Server in ascolto sulle porte HTTP:" + HTTP_PORT + ", HTTPS:" + HTTPS_PORT);
 });
 
 let paginaErrore:string = "";

@@ -1,0 +1,32 @@
+{
+  "name": "edu.vallauri.rilievieperizie",
+  "displayName": "Rilievi e Perizie",
+  "version": "1.0.0",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^10.1.2"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "426153637541-1iia362vb92v7m6a6rba0j1596mfmmn0.apps.googleusercontent.com",
+        "PLAY_SERVICES_VERSION": "15.0.1"
+      }
+    }
+  },
+  "dependencies": {
+    "cordova-plugin-googleplus": "8.5.2"
+  }
+}
