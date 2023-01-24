@@ -43,11 +43,11 @@ function erroreSweetAlert(errorMessage){
 
 function errore(jqXHR, testStatus, strError) {
 	if (jqXHR.status == 0)
-		alert("Connection refused or Server timeout");
+		erroreSweetAlert("Connection refused or Server timeout");
 	else if (jqXHR.status == 200)
-		alert("Formato dei dati non corretto : " + jqXHR.responseText);
+		erroreSweetAlert("Formato dei dati non corretto : " + jqXHR.responseText);
 	else if (jqXHR.status == 403) //accesso negato (token scaduto)
 		window.location.href = "login.html"
 	else
-		alert("Server Error: " + jqXHR.status + " - " + jqXHR.responseText);
+		erroreSweetAlert("Server Error: " + jqXHR.status + " - " + jqXHR.responseText);
 }

@@ -2,12 +2,9 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src *;
-        script-src * 'unsafe-inline';
-        style-src * 'unsafe-inline';
-        img-src 'self' data: content:; ">
+	<meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"  
+	      content="default-src *;  script-src * 'unsafe-inline';  style-src * 'unsafe-inline';  img-src *  data:  content:; ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
@@ -35,12 +32,12 @@
                         reale</p>
                 </div>
             </div>
-            <div class="container-row">
+            <!-- <div class="container-row">
                 <a class="d-lg-none d-xl-none d-xxl-none
                     d-sm-block  d-md-block" href="#registrationLogin">
                     <i class="fa-solid fa-arrow-down fa-3x" id="arrow"></i>
                 </a>
-            </div>
+            </div> -->
         </div>
 
         <div id="registrationLogin" class="section-login">
@@ -52,7 +49,18 @@
                 <div class="container">
                     <p>Crea un nuovo account </p>
                     <p>Inserisci i tuoi dati per completare la registrazione</p>
-                    <div id="googleDiv"></div>
+                    <div onclick="gplusLogin()">
+                        <div style="height: 50px; width: 100%;">
+                            <div class="containerButtonGoogle" style="display:flex; align-items:baseline; justify-content:center; border: 1px solid white;">
+                                <div class="containerIconGoogle" style="padding: 10px;">
+                                    <iconify-icon icon="logos:google-icon" width="20" height="20"></iconify-icon>
+                                </div>
+                                <div class="containerTextGoogle">
+                                    <p style="margin-bottom: 0px;">Accedi con Google</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="or-section">
                         <p></p>
                         <p>or</p>

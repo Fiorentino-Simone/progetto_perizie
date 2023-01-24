@@ -158,9 +158,94 @@ window.onload = async function () {
     let likedSection = $("#likedSection");
     likedSection.on("click", viewLikedPerizie);
 
+    let modalEditUserCurrent = $("#modalEditUserCurrent");
+    let editButtonUtente = $("#editButtonUtente");
+    editButtonUtente.on("click", function () {
+        modalEditUserCurrent.modal("show");
+    });
+
+    let btnEditUtente = $("#btnEditUtente");
+    btnEditUtente.on("click", editUtente);
+
+    let contattamiSection = $("#contattamiSection");
+    contattamiSection.on("click", viewContattami);
+
+    let btnInviaContattami = $("#btnInviaContattami");
+    btnInviaContattami.on("click", inviaContattami);
+
     //#endregion
 
     /**********FUNCTIONS AND REQUESTS ****************/
+
+    function viewContattami(){
+        $(".mapContainer").css("display", "none");
+        $(".dashboardAdmin").addClass("d-none");
+        $(".periziaDetails").addClass("d-none");
+
+        $(".contattamiContainter").removeClass("d-none");
+        $(".contattamiContainter").addClass("d-block");
+    }
+
+    function inviaContattami(){
+        //get contattami values
+        let nome = $("#nome").val();
+        let cognome = $("#cognome").val();
+        let email = $("#emailForm").val();
+        let messaggio = $("#messaggio").val();
+
+        let obj = {
+            nome: nome,
+            cognome: cognome,
+            email: email,
+            messaggio: messaggio
+        }
+
+        let request = inviaRichiesta("POST", "/api/contattami", {obj});
+        request.fail(errore);
+        request.done((data) => {
+            Swal.fire({
+                title: "Messaggio inviato",
+                text: "Grazie per averci contattato, ti risponderemo al più presto",
+                icon: "success",
+                confirmButtonText: "Ok",
+            });
+            $("#nome").val("");
+            $("#cognome").val("");
+            $("#emailForm").val("");
+            $("#messaggio").val("");
+        });
+    }
+
+    function editUtente() {
+        //take the value of the input
+        let email = $("#editEmail").val();
+        let password = $("#editPassword").val();
+        let tel = $("#editTel").val();
+        let nominativo = $("#editNominativo").val();
+
+        let obj = {};
+        //control if the is not empty i insert into the object
+        if (email != "") obj.email = email;
+        if (password != "") obj.password = password;
+        if (tel != "") obj.phone = tel;
+        if (nominativo != "") obj.nominativo = nominativo;
+
+        obj.codOperator = operator;
+
+        let request = inviaRichiesta("POST", "/api/editUtente", { obj });
+        request.fail(errore);
+        request.done((data) => {
+            //if the request is done correctly, the modal is closed
+            modalEditUserCurrent.modal("hide");
+            //Swal alert to notify the user that the operation is done
+            Swal.fire({
+                title: 'Modifica effettuata',
+                text: 'I dati sono stati modificati',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            });
+        });
+    }
 
     function viewLikedPerizie() {
         pagination = 1;
@@ -181,10 +266,10 @@ window.onload = async function () {
                 let perizia = perizieGlobal.find(x => x._id == likedPerizie[i]);
                 perizie.push(perizia);
             }
+            $(".results").text(perizie.length + " risultati");
             inserisciMarkers(perizie);
             visualizePerizie(perizie);
         }
-
     }
 
     function filterPerizie() {
@@ -319,6 +404,7 @@ window.onload = async function () {
                 indexPerizie = 0;
                 indexScoreContainer = 0;
                 containerPerizie.empty();
+                $(".results").text(data.length + " risultati");
                 if (data.length == 0) {
                     containerPerizie.append(
                         $("<div>")
@@ -442,7 +528,12 @@ window.onload = async function () {
                 if (data.admin != "true" && data.admin != "false") error = true;
 
                 if (error) {
-                    alert("Dati inseriti non validi");
+                    //Swall alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Errore',
+                        text: 'Dati inseriti non validi',
+                    })                    
                     return;
                 }
 
@@ -451,7 +542,13 @@ window.onload = async function () {
                 request.done((data) => {
                     console.log(data);
                     if (data.acknowledged) {
-                        alert("Dati modificati");
+                        //Swall alert success
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Dati modificati con successo',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                         //set all input values in readonly
                         $(".valuesOperator").each(function () {
                             $(this).prop("readonly", true);
@@ -467,7 +564,12 @@ window.onload = async function () {
                         listDipendenti();
                     }
                     else {
-                        alert("Errore nella modifica dei dati");
+                        //Swall alert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Errore',
+                            text: 'Dati inseriti non validi',
+                        })
                     }
                 });
             });
@@ -594,12 +696,12 @@ window.onload = async function () {
         $(".numberPagination").text("Pagina: " + pagination);
         indexScoreContainer = 0;
         containerPerizie.empty();
-        if(isAdmin)
+        if (isAdmin)
             getPerizie(null, null);
         else
             getPerizie(operator, null);
-        
-        
+
+
     }
 
     function orderPerizie() {
@@ -664,7 +766,7 @@ window.onload = async function () {
                 });
             }
             inserisciMarkers(data);
-            if (data.length > 0){
+            if (data.length > 0) {
                 pagination = 1;
                 $(".numberPagination").text("Pagina: " + pagination);
                 indexPerizie = 0;
@@ -690,7 +792,7 @@ window.onload = async function () {
             $("<div>").addClass("col").appendTo(containerPerizie)
                 .append($("<div>").addClass("card mb-3")
                     .append($("<div>").addClass("row g-0")
-                        .append($("<div>").addClass("col-md-4")
+                        .append($("<div>").addClass("col-md-4 col-sm-12 d-flex justify-content-center")
                             .append($("<img>").attr("src", perizia.photos[0].url).addClass("img-fluid rounded-start").attr("alt", "testImage").on("click", function () { visualizzaPerizia(perizia) })))
                         .append($("<div>").addClass("col-md-8")
                             .append($("<div>").addClass("card-body")
@@ -730,6 +832,9 @@ window.onload = async function () {
                         console.log(data);
                         $("#" + idPerizia).attr("icon", "mdi:heart");
                         $("#" + idPerizia).css("color", "red");
+
+                        //aggiorno la lista delle perizie preferite
+                        likedPerizie.push(idPerizia);
                     });
                 }
                 else {
@@ -740,6 +845,9 @@ window.onload = async function () {
                         console.log(data);
                         $("#" + idPerizia).attr("icon", "mdi:heart-outline");
                         $("#" + idPerizia).css("color", "black");
+
+                        //aggiorno la lista delle perizie preferite
+                        likedPerizie.splice(likedPerizie.indexOf(idPerizia), 1);
                     });
                 }
 
@@ -806,7 +914,7 @@ window.onload = async function () {
         //si potrebbe usare il setInterval per usare il getPosition() tipo ogni 10secondi
         let gpsOptions = {
             enableHighAccuracy: false,
-            timeout: 5000,
+            timeout: 10000,
             maximumAge: 0 // tempo max di presenza in cache della risposta (ms) //cioè mi restituisce l'ultimo valore senza aggiornarlo
         }
         //navigator.geolocation.getCurrentPosition(visualizzaPosizione, errore, gpsOptions)
@@ -906,7 +1014,8 @@ window.onload = async function () {
                 let date = $(".datePerizia").val();
                 let completed = $(".completedPerizia").prop("checked");
                 let validated = $(".validatedPerizia").prop("checked");
-                let comment = $(".commentoPerizia").val();
+                let comment; 
+                if(isAdmin) comment = $(".commentoPerizia").val();
 
                 //calculate the score
                 let score = 0;
@@ -952,10 +1061,21 @@ window.onload = async function () {
                 if (score != perizia.score && score != 0) parameters.score = score;
                 else if (score == 0) error = true;
                 else delete parameters.score;
-                if (comment != perizia.comment && comment != "") parameters.comment = comment;
-                else if (comment == "") error = true;
+                if(isAdmin) {
+                    if (comment != perizia.comment && comment != "") parameters.comment = comment;
+                    else if (comment == "") error = true;
+                    else delete parameters.comment;
+                }
+
+                console.log(parameters)
                 if (error) {
-                    alert("Non puoi lasciare campi vuoti");
+                    //Swal alert
+                    Swal.fire({
+                        title: 'Errore',
+                        text: "Non puoi lasciare campi vuoti",
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
                     return;
                 }
                 //send the request to the server
@@ -963,8 +1083,17 @@ window.onload = async function () {
                 request.fail(errore);
                 request.done(function (data) {
                     console.log(data);
-                    alert("Modifiche salvate");
-                    location.reload();
+                    //Swal alert and after reload the page
+                    Swal.fire({
+                        title: 'Modifiche salvate',
+                        text: "Le modifiche sono state salvate con successo",
+                        icon: 'success',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
                 });
             });
 
@@ -1124,7 +1253,7 @@ function createGoogleMaps() {
         // creazione dinamica del CDN di accesso alle google maps
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = URL + '/js?&key=' + MAP_KEY + "&libraries=geometry&callback=";
+        script.src = URL + '/js?&key=' + MAP_KEY + "&libraries=geometry";
         document.body.appendChild(script);
         script.onload = resolve; //evento che si verifica quando si carica lo script
         script.onerror = reject;

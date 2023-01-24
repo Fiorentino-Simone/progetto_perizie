@@ -83,7 +83,7 @@
                                     Ricordami per 30 giorni
                                 </label>
                             </div>
-                            <a>Password dimenticata?</a>
+                            <a id="btnForgotPassword">Password dimenticata?</a>
                         </div>
                         <button type="button" id="btnLogin" class="btn">Login</button>
                         <!-- <div class="settings-login notLogged">
@@ -92,6 +92,30 @@
                         </div> -->
                     </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODALE per HO DIMENTICATO LA PASSWORD-->
+    <div class="modal fade" id="modalForgotPassword" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Recupero password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="txtEmailForgotPassword" placeholder=" ">
+                        <label for="txtEmailForgotPassword">Email</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="button" id="btnSendEmail" class="btn btn-primary">Invia</button>
                 </div>
             </div>
         </div>

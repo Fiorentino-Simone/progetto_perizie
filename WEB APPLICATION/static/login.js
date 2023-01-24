@@ -55,6 +55,31 @@ $(document).ready(function () {
   google.accounts.id.prompt();
 
 
+  let modalForgotPassword = $("#modalForgotPassword");
+  let btnForgotPassword = $("#btnForgotPassword");
+  btnForgotPassword.on("click", function () {
+    modalForgotPassword.modal("show");
+  });
+  let btnSendEmail = $("#btnSendEmail");
+  btnSendEmail.on("click", function () {
+    let email = $("#txtEmailForgotPassword").val();
+    let request = inviaRichiesta("POST", "/api/forgotPassword", {
+      email: email
+    });
+    request.fail(function (jqXHR, test_status, str_error) {
+      if (jqXHR.status == 401) {
+        alert("Non sei autorizzato ad accedere, contatta l'amministratore");
+      }else errore(jqXHR, test_status, str_error);
+    });
+    request.done(function (data, test_status, jqXHR) {
+      console.log(data);
+      if(data.ris=="ok")
+        modalForgotPassword.modal("hide");
+      else alert("Email non trovata");
+    });
+  });
+
+
 
 
   /*********************FUNCTIONS AND REQUEST ************/

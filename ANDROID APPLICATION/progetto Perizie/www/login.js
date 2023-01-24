@@ -5,8 +5,8 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
-  let boolClicked=false;
-  
+  let boolClicked = false;
+
   //riferimenti della login page
   let email = $("#txtEmail");
   let pwd = $("#txtPassword");
@@ -21,6 +21,30 @@ function onDeviceReady() {
   //se su mobile allora uso la funzione lampeggia
   if ($(window).width() < 768)
     lampeggia();
+
+  let modalForgotPassword = $("#modalForgotPassword");
+  let btnForgotPassword = $("#btnForgotPassword");
+  btnForgotPassword.on("click", function () {
+    modalForgotPassword.modal("show");
+  });
+  let btnSendEmail = $("#btnSendEmail");
+  btnSendEmail.on("click", function () {
+    let email = $("#txtEmailForgotPassword").val();
+    let request = inviaRichiesta("POST", "/api/forgotPassword", {
+      email: email
+    });
+    request.fail(function (jqXHR, test_status, str_error) {
+      if (jqXHR.status == 401) {
+        alert("Non sei autorizzato ad accedere, contatta l'amministratore");
+      } else errore(jqXHR, test_status, str_error);
+    });
+    request.done(function (data, test_status, jqXHR) {
+      console.log(data);
+      if (data.ris == "ok")
+        modalForgotPassword.modal("hide");
+      else alert("Email non trovata");
+    });
+  });
 
   /*********************FUNCTIONS AND REQUEST ************/
   function lampeggia() { //funzione per il lampeggio della freccia che porta alla scelta delle option
@@ -52,8 +76,8 @@ function onDeviceReady() {
       pwd.addClass("my-is-invalid is-invalid");
       pwd.prev().addClass("icona-rossa");
       err = true;
-    } 
-    if(!err) {
+    }
+    if (!err) {
       let request = inviaRichiesta("POST", "/api/login", {
         email: email.val(),
         password: pwd.val(),
@@ -80,7 +104,7 @@ function onDeviceReady() {
 
 }
 
-function gplusLogin(){
+function gplusLogin() {
   //login con google
   /*global google*/
   window.plugins.googleplus.login(
@@ -95,7 +119,7 @@ function gplusLogin(){
       request.fail(function (jqXHR, test_status, str_error) {
         if (jqXHR.status == 401) {
           alert("Non sei autorizzato ad accedere, contatta l'amministratore");
-        }else errore(jqXHR, test_status, str_error);
+        } else errore(jqXHR, test_status, str_error);
       });
       request.done(function (data, test_status, jqXHR) {
         console.log(jqXHR.getResponseHeader('Authorization')) //prendiamo il token			

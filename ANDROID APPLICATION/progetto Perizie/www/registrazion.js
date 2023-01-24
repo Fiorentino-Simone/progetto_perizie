@@ -1,7 +1,30 @@
 "use strict"
 
+//document ready of cordova
+document.addEventListener("deviceready", onDeviceReady, false);
 
-$(document).ready(function () {
+function gplusLogin() {
+    //registration con google
+    /*global google*/
+    window.plugins.googleplus.login(
+        {
+            'webClientId': '426153637541-f66k37cc793jejdbg1llisk75kbfckt2.apps.googleusercontent.com',
+            'offline': true
+        },
+        function (obj) {
+            let request = inviaRichiesta("POST", "/api/googleRegistration", {
+                token: obj.idToken
+            });
+            request.fail(errore);
+            request.done(function (data, test_status, jqXHR) {
+                console.log(jqXHR.getResponseHeader('Authorization')) //prendiamo il token			
+                window.location.href = "index.html"
+            });
+        }
+    );
+}
+
+function onDeviceReady() {
     let boolClicked = false;
     let err = false;
 
@@ -27,40 +50,6 @@ $(document).ready(function () {
     request.done(function (data) {
         console.log(data);
     });
-    
-
-    /*global google*/
-    google.accounts.id.initialize({
-        "client_id": "426153637541-f66k37cc793jejdbg1llisk75kbfckt2.apps.googleusercontent.com",
-        "callback": function (response) {
-            if (response.credential !== "") {
-                let request = inviaRichiesta("POST", "/api/googleRegistration", {
-                    token: response.credential
-                });
-                request.fail(errore);
-                request.done(function (data, test_status, jqXHR) {
-                    console.log(jqXHR.getResponseHeader('Authorization')) //prendiamo il token			
-                    window.location.href = "index.html"
-                });
-            }
-        }
-    });
-
-    google.accounts.id.renderButton(
-        document.getElementById("googleDiv"),
-        {
-            "theme": "outline",
-            "size": "large",
-            "type": "standard",
-            "text": "continue_with",
-            "shape": "rectangular",
-            "logo_alignment": "center"
-        }
-    );
-
-    $("#googleDiv").find().addClass("google-btn")
-
-    google.accounts.id.prompt();
 
     /*********************FUNCTIONS AND REQUEST ************/
     function lampeggia() { //funzione per il lampeggio della freccia che porta alla scelta delle option
@@ -118,4 +107,4 @@ $(document).ready(function () {
         }
         else alert("Compila tutti i campi");
     }
-});
+}

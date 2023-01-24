@@ -3,16 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src *;
-        script-src * 'unsafe-inline';
-        style-src * 'unsafe-inline';
-        img-src 'self' data: content:; ">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src *;  script-src * 'unsafe-inline';  style-src * 'unsafe-inline';  img-src *  data:  content:; ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -30,20 +24,20 @@
 
     <div class="container-fluid sidebarContainer">
         <div class="row sidebar">
-            <div class="col-sm-auto"  style="z-index: 2;">
+            <div class="col-sm-auto" style="z-index: 5;">
                 <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top">
                     <ul id="navBar"
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center justify-content-between w-100 pe-3 align-items-center">
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
                                 data-bs-original-title="Home">
                                 <iconify-icon icon="material-symbols:home-outline-rounded" width="40"
                                     height="40"></iconify-icon>
                             </a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
-                            <a class="nav-link py-3 px-2" title="" id="likedSection" data-bs-toggle="tooltip" data-bs-placement="right"
-                                data-bs-original-title="Like">
+                            <a class="nav-link py-3 px-2" title="" id="likedSection" data-bs-toggle="tooltip"
+                                data-bs-placement="right" data-bs-original-title="Like">
                                 <iconify-icon icon="ant-design:like-outlined" width="40" height="40"></iconify-icon>
                             </a>
                         </li>
@@ -55,22 +49,23 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right"
+                            <a class="nav-link py-3 px-2" title="" id="contattamiSection" data-bs-toggle="tooltip" data-bs-placement="right"
                                 data-bs-original-title="AccountHelp">
                                 <iconify-icon icon="mdi:account-help-outline" width="40" height="40"></iconify-icon>
                             </a>
                         </li>
+                        <li class="dropdown">
+                            <a class="d-flex align-items-center justify-content-center py-3 px-2 text-decoration-none dropdown-toggle"
+                                id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                                <iconify-icon icon="mdi:user-outline" width="40" height="40"></iconify-icon>
+                            </a>
+                            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser">
+                                <li><a class="dropdown-item" id="editButtonUtente">Modifica dati</a></li>
+                                <li><a class="dropdown-item" role="button" id="btnLogout">Logout</a></li>
+                            </ul>
+                        </li>
                     </ul>
-                    <div class="dropdown">
-                        <a class="d-flex align-items-center justify-content-center py-3 px-2 text-decoration-none dropdown-toggle"
-                            id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                            <iconify-icon icon="mdi:user-outline" width="40" height="40"></iconify-icon>
-                        </a>
-                        <ul class="dropdown-menu text-small shadow"  aria-labelledby="dropdownUser">
-                            <li><a class="dropdown-item">Modifica dati</a></li>
-                            <li><a class="dropdown-item" role="button" id="btnLogout">Logout</a></li>
-                        </ul>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -81,7 +76,7 @@
     <!-- #region MAP SECTION-->
     <div class="container-fluid mapContainer">
         <div class="row">
-            <div class="col col-7">
+            <div class="col-md-7 col-sm-12">
                 <div class="searchBar">
                     <div class="small fw-light"></div> <!--testo sopra l'input se serve-->
                     <div class="input-group">
@@ -127,12 +122,19 @@
                 <div class="cardContainer">
                     <div class="row row-cols-1 row-cols-md-12 containerPerizie">
                     </div>
+                    <div class="containerButtonAddPerizia">
+                        <!--with '+' iconify and button text-->
+                        <button type="button" id="btnAddNewPerizia" class="btn btn-primary btnAddPerizia">
+                            <iconify-icon icon="mdi:plus" width="30" height="30"></iconify-icon>
+                            <span class="textButtonAddPerizia">Aggiungi perizia</span>
+                        </button>
+                    </div>
                     <!--page indicator-->
                     <p class="numberPagination" style="text-align: center;"></p>
                 </div>
             </div>
             <!--https://www.codeply.com/p/jYwDonANZl#-->
-            <div class="col col-5">
+            <div class="col-md-5 col-sm-12">
                 <div id="map">
                 </div>
             </div>
@@ -140,6 +142,105 @@
     </div>
 
     <!-- #endregion MAP SECTION-->
+
+
+    <!-- #region ADD PERIZIA-->
+    <div class="container-fluid addPeriziaContainer d-none" style="margin-bottom: 2rem">
+        <h1 style="text-align: center;">Aggiungi Perizia</h1>
+        <div class="row justify-content-center">
+            <!--photo container-->
+            <div class="col-11" style="padding-bottom: 2rem;">
+                <!--shot a photo and put that into the container-->
+                <div class="containerMax4Photos">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="containerPhoto">
+                                <img src="" class="img-fluid photoShotted" id="img1">
+                                <textarea class="form-control inputDescrizioneFoto" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="containerPhoto">
+                                <img src="" class="img-fluid photoShotted" id="img2">
+                                <textarea class="form-control inputDescrizioneFoto" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="containerPhoto">
+                                <img src="" class="img-fluid photoShotted" id="img3">
+                                <textarea class="form-control inputDescrizioneFoto" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="containerPhoto">
+                                <img src="" class="img-fluid photoShotted" id="img4">
+                                <textarea class="form-control inputDescrizioneFoto" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btnPhotoContainer d-flex justify-content-center" style="padding-top: 2rem;">
+                    <button class="btn btn-primary" id="btnScatta" style="margin-right: 2rem;">Scatta</button>
+                    <button class="btn btn-primary" id="btnCerca">Cerca</button>
+                </div>
+            </div>
+
+            <!--input fields to complete for create a perizia-->
+            <div class="col-11">
+                <!--titolo-->
+                <div class="form-group row">
+                    <label for="inputTitolo" class="col-4 col-form-label">Titolo</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="inputTitolo">
+                    </div>
+                </div>
+                <!--descrizione-->
+                <div class="form-group row">
+                    <label for="inputDescrizione" class="col-4 col-form-label">Descrizione</label>
+                    <div class="col-8">
+                        <textarea class="form-control" id="inputDescrizione" rows="3"></textarea>
+                    </div>
+                </div>
+                <!--nome del luogo-->
+                <div class="form-group row">
+                    <label for="inputNomeLuogo" class="col-4 col-form-label">Nome del luogo</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="inputNomeLuogo">
+                    </div>
+                </div>
+                <!--indirizzo-->
+                <div class="form-group row">
+                    <label for="inputIndirizzo" class="col-4 col-form-label">Indirizzo</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="inputIndirizzo">
+                    </div>
+                </div>
+                <!--data-->
+                <div class="form-group row">
+                    <label for="inputData" class="col-4 col-form-label">Data</label>
+                    <div class="col-8">
+                        <input type="date" class="form-control" id="inputData">
+                    </div>
+                </div>
+                <!--valutazione-->
+                <div class="form-group row containerNewPeriziaScore d-none">
+                    <label for="inputValutazione" class="col-4 col-form-label">Valutazione assegnata </label>
+                    <div class="col-8">
+                        <p class="scoreNewPerizia"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding-top: 2rem" class="containerSaveNewPerizia d-flex justify-content-center">
+                <button style="margin-right: 2rem;" type="button" class="btn btn-primary" id="btnSaveNewPerizia">Salva</button>
+                <button type="button" class="btn btn-primary" id="btnCancelNewPerizia">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- #endregion ADD PERIZIA-->
 
 
     <!-- #region ADMIN DASHBORD-->
@@ -214,36 +315,36 @@
                         </div>
                         <div>
                             <div class="mb-3 row">
-                                <label for="codOperator" class="col-sm-4 col-form-label">Codice Operatore</label>
-                                <div class="col-sm-6">
+                                <label for="codOperator" class="col-6 col-form-label">Codice Operatore</label>
+                                <div class="col-6">
                                     <input type="text" readonly class="form-control-plaintext valuesOperator"
                                         id="codOperator" value="">
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="email" class="col-sm-4 col-form-label">Email</label>
-                                <div class="col-sm-6">
+                                <label for="email" class="col-6 col-form-label">Email</label>
+                                <div class="col-6">
                                     <input type="email" readonly class="form-control-plaintext valuesOperator"
                                         id="email" value="">
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="phone" class="col-sm-4 col-form-label">Telefono</label>
-                                <div class="col-sm-6">
+                                <label for="phone" class="col-6 col-form-label">Telefono</label>
+                                <div class="col-6">
                                     <input type="tel" readonly class="form-control-plaintext valuesOperator" id="phone"
                                         value="">
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="admin" class="col-sm-4 col-form-label">Admin</label>
-                                <div class="col-sm-6">
+                                <label for="admin" class="col-6 col-form-label">Admin</label>
+                                <div class="col-6">
                                     <input type="text" readonly class="form-control-plaintext valuesOperator" id="admin"
                                         value="">
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="nominativo" class="col-sm-4 col-form-label">Nominativo</label>
-                                <div class="col-sm-6">
+                                <label for="nominativo" class="col-6 col-form-label">Nominativo</label>
+                                <div class="col-6">
                                     <input type="text" readonly class="form-control-plaintext valuesOperator"
                                         id="nominativo" value="">
                                 </div>
@@ -278,7 +379,7 @@
             <div class="d-flex" style="padding-left: 30%">
                 <h1 class="card-title">Dettagli della perizia</h1>
             </div>
-            <div class="col col-5">
+            <div class="col col-md-5 col-11">
                 <div id="carouselImage" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
 
@@ -298,7 +399,7 @@
                 </div>
             </div>
 
-            <div class="col col-6" style="padding-left: 2rem;">
+            <div class="col col-md-6 col-11" style="padding-left: 2rem;">
                 <div class="floatEnd">
                     <iconify-icon icon="material-symbols:edit-outline" id="editValuesPerizia" width="35"
                         height="35"></iconify-icon>
@@ -307,65 +408,65 @@
                 <div class="card" style="border: none;">
                     <div class="card-body" style="padding: 0;">
                         <div class="mb-3 row">
-                            <h1 for="titlePerizia" class="col-sm-4 col-form-label">Titolo della perizia: </h1>
-                            <div class="col-sm-6">
+                            <h1 for="titlePerizia" class="col-6 col-form-label">Titolo della perizia: </h1>
+                            <div class="col-6">
                                 <input type="text" readonly class="form-control-plaintext titlePerizia"
                                     id="titlePerizia" value="">
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <h1 for="descriptionPerizia" class="col-sm-4 col-form-label">Descrizione della perizia:
+                            <h1 for="descriptionPerizia" class="col-6 col-form-label">Descrizione della perizia:
                             </h1>
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <textarea type="text" readonly class="form-control-plaintext descriptionPerizia"
                                     id="descriptionPerizia" value=""></textarea>
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <h1 for="scorePerizia" class="col-sm-4 col-form-label">Valutazione assegnata: </h1>
-                            <div class="col-sm-6">
+                            <h1 for="scorePerizia" class="col-6 col-form-label">Valutazione assegnata: </h1>
+                            <div class="col-6">
                                 <p class="scorePerizia"></p>
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <h1 for="placePerizia" class="col-sm-4 col-form-label">Perizia effettuata al: </h1>
-                            <div class="col-sm-6">
+                            <h1 for="placePerizia" class="col-6 col-form-label">Perizia effettuata al: </h1>
+                            <div class="col-6">
                                 <input type="text" readonly class="form-control-plaintext placePerizia"
                                     id="placePerizia" value="">
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <h1 for="datePerizia" class="col-sm-4 col-form-label">Perizia effettuata nel: </h1>
-                            <div class="col-sm-6">
+                            <h1 for="datePerizia" class="col-6 col-form-label">Perizia effettuata nel: </h1>
+                            <div class="col-6">
                                 <input type="date" readonly class="form-control-plaintext datePerizia" id="datePerizia"
                                     value="">
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <h1 for="completedPerizia" class="col-sm-4 col-form-label">Completato: </h1>
-                            <div class="col-sm-6">
+                            <h1 for="completedPerizia" class="col-6 col-form-label">Completato: </h1>
+                            <div class="col-6">
                                 <input type="checkbox" disabled style="display: inline-block;"
                                     class="form-control-plaintext completedPerizia" id="completedPerizia" value="">
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <h1 for="validatedPerizia" class="col-sm-4 col-form-label">Validato: </h1>
-                            <div class="col-sm-6">
+                            <h1 for="validatedPerizia" class="col-6 col-form-label">Validato: </h1>
+                            <div class="col-6">
                                 <input type="checkbox" disabled style="display: inline-block;"
                                     class="form-control-plaintext validatedPerizia" id="validatedPerizia" value="">
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <h1 for="authorPerizia" class="col-sm-4 col-form-label">Autore della perizia: </h1>
-                            <div class="col-sm-6">
+                            <h1 for="authorPerizia" class="col-6 col-form-label">Autore della perizia: </h1>
+                            <div class="col-6">
                                 <input type="text" readonly class="form-control-plaintext authorPerizia"
                                     id="authorPerizia" value="">
                             </div>
                         </div>
                         <div class="mb-3 row d-none containerCommentPerizia">
-                            <h1 for="commentoPerizia" class="col-sm-4 col-form-label">Commento da parte del
+                            <h1 for="commentoPerizia" class="col-6 col-form-label">Commento da parte del
                                 supervisionatore: </h1>
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <input type="text" readonly class="form-control-plaintext commentoPerizia"
                                     id="commentoPerizia" value="">
                             </div>
@@ -376,13 +477,15 @@
 
                 </div>
             </div>
-
-            <h1 style="padding-bottom: 20px">Visualizza nella mappa</h1>
-            <div class="d-flex justify-content-between" style="margin-bottom: 3rem;">
-                <div class="d-inline-block" id="mapPerizia" style="width: 70%; height: 400px;"></div>
-                <div class="d-inline-block" id="panelPerizia" style="width: 25%; height: 400px; overflow: auto;"></div>
+            <div class="containerMappa">
+                <h1 style="padding-bottom: 20px">Visualizza nella mappa</h1>
+                <div class="d-flex justify-content-between" style="margin-bottom: 3rem;">
+                    <div class="d-inline-block" id="mapPerizia" style="width: 70%; height: 400px;"></div>
+                    <div class="d-inline-block" id="panelPerizia" style="width: 25%; height: 400px; overflow: auto;">
+                    </div>
+                </div>
+                <br>
             </div>
-            <br>
         </div>
     </div>
 
@@ -478,6 +581,127 @@
         </div>
     </div>
     <!-- #endregion MODALS FILTER-->
+
+    <!-- #region MODALS EDIT USER -->
+    <div class="modal fade" id="modalEditUserCurrent" tabindex="-1" aria-labelledby="label" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="label">Modifiche dell'utente</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 row">
+                        <label for="editEmail" class="col-sm-4 col-form-label">Modifica della email</label>
+                        <div class="col-sm-6">
+                            <input type="email" class="form-control" id="editEmail" value="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="editPassword" class="col-sm-4 col-form-label">Modifica della password</label>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" id="editPassword" value="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="editTel" class="col-sm-4 col-form-label">Modifica del telefono</label>
+                        <div class="col-sm-6">
+                            <input type="tel" class="form-control" id="editTel" value="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="editNominativo" class="col-sm-4 col-form-label">Modifica del nominativo</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="editNominativo" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnRemoveEdited" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Annulla modifiche</button>
+                    <button type="button" id="btnEditUtente" class="btn btn-primary">Applica modifiche</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #endregion MODALS EDIT USER-->
+
+    
+    <!--#region CONTATTAMI -->
+    <div class="contattamiContainter d-none">
+        <div class="row">
+            <div class="contattamiTitle">
+                <h1>Contattami</h1>
+            </div>
+            <div class="col-md-7 col-sm-12">
+                <div class="contattami">
+                    <div class="contattamiForm">
+                        <form>
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="nome" placeholder="Inserisci il tuo nome">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cognome" class="form-label">Cognome</label>
+                                <input type="text" class="form-control" id="cognome"
+                                    placeholder="Inserisci il tuo cognome">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailForm"
+                                    placeholder="Inserisci la tua email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="messaggio" class="form-label">Messaggio</label>
+                                <textarea class="form-control" id="messaggio" rows="3"></textarea>
+                            </div>
+                            <div class="divContainer" style="width: 100%; text-align: center;">
+                                <button type="button" id="btnInviaContattami" class="btn btn-lg btn-primary">Invia</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 col-sm-12" style="padding-left: 50px;">
+                <div class="contattamiInfoTitle">
+                    <h1>Info</h1>
+                </div>
+                <div class="contattamiInfo">
+                    <div class="contattamiInfoText">
+                        <p>Per qualsiasi informazione o chiarimento non esitare a contattarmi</p>
+                    </div>
+                    <div class="contattamiInfoContact">
+                        <!--inserire il mailto con iconify e label-->
+                        <a href="mailto:s.fiorentino.1743@vallauri.edu">
+                            <iconify-icon icon="mdi:email-outline" width="40" height="40"></iconify-icon>
+                            <label>
+                                Contattami all'indirizzo email: s.fiorentino.1743@vallauri.edu
+                            </label>
+                        </a>
+                        <!--inserire il telefono per una chiamata -->
+                        <a href="tel:+393664012025">
+                            <iconify-icon icon="mdi:phone-outline" width="40" height="40"></iconify-icon>
+                            <label>
+                                Contattami al numero: +393664012025
+                            </label>
+                        </a>
+                        <!--inserire le icone clicabili dei social media -->
+                        <a href="https://www.facebook.com/Simone.Fiorentino04/">
+                            <iconify-icon icon="mdi:facebook" width="40" height="40"></iconify-icon>
+                        </a>
+                        <a href="https://www.instagram.com/simo.fiorentino/">
+                            <iconify-icon icon="mdi:instagram" width="40" height="40"></iconify-icon>
+                        </a>
+                        <a href="https://www.linkedin.com">
+                            <iconify-icon icon="mdi:linkedin" width="40" height="40"></iconify-icon>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <!--#endregion CONTATTAMI-->
+    
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"

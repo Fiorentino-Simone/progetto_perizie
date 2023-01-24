@@ -13,7 +13,9 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-android": "^10.1.2"
+    "cordova-android": "^10.1.2",
+    "cordova-plugin-camera": "^6.0.0",
+    "cordova-plugin-geolocation": "^4.1.0"
   },
   "cordova": {
     "platforms": [
@@ -23,6 +25,12 @@
       "cordova-plugin-googleplus": {
         "REVERSED_CLIENT_ID": "426153637541-1iia362vb92v7m6a6rba0j1596mfmmn0.apps.googleusercontent.com",
         "PLAY_SERVICES_VERSION": "15.0.1"
+      },
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
+      },
+      "cordova-plugin-camera": {
+        "ANDROIDX_CORE_VERSION": "1.6.+"
       }
     }
   },

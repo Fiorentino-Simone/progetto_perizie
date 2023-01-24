@@ -552,6 +552,62 @@ input[type="checkbox"]:checked {
     color : black !important;
 }
 
+
+/**************MOBILE CORDOVA**************/
+.containerButtonAddPerizia{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.containerButtonAddPerizia .btn{
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+
+.addPeriziaContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+}
+
+
+.scoreNewPerizia{
+    margin-bottom: 0px;
+}
+
+.containerPerizie .card img{
+    max-height: 200px;
+}
+
+.carousel-item img{
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.contattamiContainter{
+    padding-top: 5rem;
+}
+
+.contattamiContainter > div:first-of-type {
+    align-items: normal !important;
+}
+
+.contattamiInfoContact{
+    display: grid;
+}
+
+.contattamiInfoContact a{
+    text-decoration: none;
+    color: black;
+    margin-bottom: 1rem;
+}
+
 /*Media query for pc (1920 x 920)*/
 @media (min-width: 1920px) {
 
@@ -572,7 +628,7 @@ input[type="checkbox"]:checked {
         justify-content: center;
     }
 
-    .img-fluid {
+    .wrapper .img-fluid {
         max-width: 50% !important;
     }
 
@@ -609,5 +665,137 @@ input[type="checkbox"]:checked {
 
     .settings-login p {
         margin-bottom: 0;
+    }
+
+
+    /****************MAPCONTAINER**************/
+    .sidebar{
+        width: auto;
+        height: 80px;
+        padding-left: 0px;
+        flex-direction: row;
+        justify-content: normal;
+        align-content: normal;
+        align-items: normal;
+    }
+
+    .sidebar > div:first-of-type{
+        position: static;
+    }
+
+    .mapContainer{
+        width: 95%;
+        height: 100vh;
+        padding: 0;
+        position: static;
+        display: block;
+    }
+
+    .btnGroup{
+        display: grid;
+    }
+
+    .btnGroup>label{
+        margin-bottom: 20px;
+    }
+
+    .containerPerizie .img-fluid{
+        max-height: 200px;
+    }
+
+    #navBar{
+        padding-right: 0rem !important;
+    }
+
+    #dropdownUser{
+        margin-bottom: 0.5rem;
+    }
+
+    /***dashboardAdmin***/
+    .dashboardAdmin {
+        position: static;
+        width: 95%;
+    }
+
+    .periziaDetails {
+        position: static;
+        width: 100%;
+    }
+
+    .contattamiContainter{
+        position: static;
+        width: 100%;
+    }
+
+    .chartContainer{
+        width: 100%;
+        height: 240px;   
+    }
+
+    .chartContainer #chartPerizie{
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .periziaDetails{
+        padding-top: 0;
+    }
+
+    .periziaDetails > div:first-of-type{
+        justify-content: center;
+    }
+
+    .periziaDetails .col{
+        padding-top: 1rem;
+    }
+
+    .periziaDetails .row > div:first-of-type{
+        padding-left: 0 !important;
+        justify-content: center;
+    }
+
+    .periziaDetails .col-md-6 .card{
+        width: 100% !important;
+    }
+
+    .periziaDetails .col-md-6 .card .card-body{
+        padding: inherit !important;
+    }
+
+    .periziaDetails input{
+        text-overflow: ellipsis;
+    }
+
+    .containerMappa, 
+    .periziaDetails .col-md-6,
+    .contattamiContainter{
+        padding-left: 1rem !important;
+        padding-right: 1rem;
+    }
+
+    .containerMappa .justify-content-between{
+        display: grid !important;
+    }
+
+    .containerMappa .justify-content-between > div{
+        width: 100% !important;
+    }
+
+    .contattamiContainter{
+        padding-top: 0;
+    }
+
+    .contattamiContainter .col-md-5{
+        padding-left: 10px !important;
+        padding-top: 2rem;
+    }
+
+    .contattamiInfoContact a{
+        display: flex;
+        align-items: center;
+    }
+
+    .contattamiInfoContact a > iconify-icon{
+        margin-right: 2rem;
     }
 }

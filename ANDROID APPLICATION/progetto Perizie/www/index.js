@@ -158,9 +158,364 @@ window.onload = async function () {
     let likedSection = $("#likedSection");
     likedSection.on("click", viewLikedPerizie);
 
+    let btnAddNewPerizia = $("#btnAddNewPerizia");
+    btnAddNewPerizia.on("click", addNewPerizia);
+
+    let btnCancelNewPerizia = $("#btnCancelNewPerizia");
+    btnCancelNewPerizia.on("click", function () {
+        //pulisce i campi
+        $("#inputTitolo").val("");
+        $("#inputDescrizione").val("");
+        $("#inputDescrizioneFoto").val("");
+        $("#inputNomeLuogo").val("");
+        $("#inputIndirizzo").val("");
+        $("#inputData").val("");
+        $(".photoShotted").each(function () {
+            $(this).prop("src", "");
+        });
+        $(".inputDescrizioneFoto").each(function () {
+            $(this).val("");
+        });
+
+        if (isAdmin) {
+            $(".starNewPerizia").each(function () {
+                $(this).prop("icon", "mdi:star-outline");
+            });
+        }
+
+        $(".addPeriziaContainer").addClass("d-none");
+        $(".addPeriziaContainer").removeClass("d-block");
+        $(".dashboardAdmin").addClass("d-none");
+        $(".periziaDetails").addClass("d-none");
+        $(".mapContainer").css("display", "block");
+    });
+
+    let btnSaveNewPerizia = $("#btnSaveNewPerizia");
+    btnSaveNewPerizia.on("click", saveNewPerizia);
+
+    let modalEditUserCurrent = $("#modalEditUserCurrent");
+    let editButtonUtente = $("#editButtonUtente");
+    editButtonUtente.on("click", function () {
+        modalEditUserCurrent.modal("show");
+    });
+
+    let btnEditUtente = $("#btnEditUtente");
+    btnEditUtente.on("click", editUtente);
+
+    let contattamiSection = $("#contattamiSection");
+    contattamiSection.on("click", viewContattami);
+
+    let btnInviaContattami = $("#btnInviaContattami");
+    btnInviaContattami.on("click", inviaContattami);
     //#endregion
 
     /**********FUNCTIONS AND REQUESTS ****************/
+
+    function viewContattami(){
+        $(".mapContainer").css("display", "none");
+        $(".dashboardAdmin").addClass("d-none");
+        $(".periziaDetails").addClass("d-none");
+        $(".addPeriziaContainer").addClass("d-none");
+
+        $(".contattamiContainter").removeClass("d-none");
+        $(".contattamiContainter").addClass("d-block");
+    }
+
+    function inviaContattami(){
+        //get contattami values
+        let nome = $("#nome").val();
+        let cognome = $("#cognome").val();
+        let email = $("#emailForm").val();
+        let messaggio = $("#messaggio").val();
+
+        let obj = {
+            nome: nome,
+            cognome: cognome,
+            email: email,
+            messaggio: messaggio
+        }
+
+        let request = inviaRichiesta("POST", "/api/contattami", {obj});
+        request.fail(errore);
+        request.done((data) => {
+            Swal.fire({
+                title: "Messaggio inviato",
+                text: "Grazie per averci contattato, ti risponderemo al più presto",
+                icon: "success",
+                confirmButtonText: "Ok",
+            });
+            $("#nome").val("");
+            $("#cognome").val("");
+            $("#emailForm").val("");
+            $("#messaggio").val("");
+        });
+    }
+
+
+    function editUtente(){
+        //take the value of the input
+        let email = $("#editEmail").val();
+        let password = $("#editPassword").val();
+        let tel = $("#editTel").val();
+        let nominativo = $("#editNominativo").val();
+
+        let obj = {};
+        //control if the is not empty i insert into the object
+        if (email != "") obj.email = email;
+        if (password != "") obj.password = password;
+        if (tel != "") obj.phone = tel;
+        if (nominativo != "") obj.nominativo = nominativo;
+
+        obj.codOperator = operator;
+
+        let request = inviaRichiesta("POST", "/api/editUtente", {obj});
+        request.fail(errore);
+        request.done((data) => {
+            //if the request is done correctly, the modal is closed
+            modalEditUserCurrent.modal("hide");
+            //Swal alert to notify the user that the operation is done
+            Swal.fire({
+                title: 'Modifica effettuata',
+                text: 'I dati sono stati modificati',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            });
+        });
+    }
+
+    function addNewPerizia() {
+        let indexOfPhotosShotted = 0;
+        $(".mapContainer").css("display", "none");
+        $(".dashboardAdmin").addClass("d-none");
+        $(".periziaDetails").addClass("d-none");
+
+        $(".addPeriziaContainer").removeClass("d-none");
+        $(".addPeriziaContainer").addClass("d-block");
+
+        if (isAdmin) {
+            $(".containerNewPeriziaScore").removeClass("d-none");
+            $(".containerNewPeriziaScore").css("align-items", "center");
+            for (let i = 0; i < 5; i++) {
+                $(".scoreNewPerizia").append($("<iconify-icon>").addClass("starNewPerizia").attr("icon", "mdi:star-outline").attr("width", "20").attr("height", "20"));
+            }
+            $(".starNewPerizia").on("click", function () {
+                if ($(this).prop("icon") == "mdi:star") $(this).prop("icon", "mdi-star-outline");
+                else $(this).prop("icon", "mdi:star");
+            });
+        }
+
+        let cameraOptions = {
+            destinationType: Camera.DestinationType.DATA_URL,
+            correctOrientation: true,
+            // encodingType: Camera.EncodingType.JPEG,
+        }
+
+        $("#btnScatta").on("click", acquisisciFoto)
+        $("#btnCerca").on("click", acquisisciFoto)
+
+        function acquisisciFoto() {
+            if ($(this).prop("id") == "btnScatta")
+                cameraOptions.sourceType = Camera.PictureSourceType.CAMERA
+            else
+                cameraOptions.sourceType = Camera.PictureSourceType.PHOTOLIBRARY
+
+            navigator.camera.getPicture(onSuccess, onFail, cameraOptions);
+
+            function onSuccess(imageData) {
+                let image = $(".photoShotted").eq(indexOfPhotosShotted);
+                image.attr("src", "data:image/jpeg;base64," + imageData);
+                indexOfPhotosShotted++;
+                if (indexOfPhotosShotted > 3)
+                    indexOfPhotosShotted = 0;
+            }
+
+            function onFail(message) {
+                //create a Swal alert to notify the user that the operation is failed
+                Swal.fire({
+                    title: 'Errore',
+                    text: 'Si è verificato un errore durante la scelta della foto',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        }
+    }
+
+    function saveNewPerizia() {
+        //controlli sui campi
+        let error = false;
+        if ($("#inputTitolo").val() == "") {
+            $("#inputTitolo").addClass("is-invalid");
+            error = true;
+        }
+        else $("#inputTitolo").removeClass("is-invalid");
+        if ($("#inputDescrizione").val() == "") {
+            $("#inputDescrizione").addClass("is-invalid");
+            error = true;
+        }
+        else $("#inputDescrizione").removeClass("is-invalid");
+        $(".inputDescrizioneFoto").each(function () {
+            let index = $(".inputDescrizioneFoto").index(this);
+            if ($(".photoShotted").eq(index).prop("src") != 'https://cordovaapp/index.html' && $(this).val() == "") {
+                $(this).addClass("is-invalid");
+                error = true;
+            }
+            else $(this).removeClass("is-invalid");
+        });
+        if ($("#inputNomeLuogo").val() == "") {
+            $("#inputNomeLuogo").addClass("is-invalid");
+            error = true;
+        }
+        else $("#inputNomeLuogo").removeClass("is-invalid");
+        if ($("#inputIndirizzo").val() == "") {
+            $("#inputIndirizzo").addClass("is-invalid");
+            error = true;
+        }
+        else $("#inputIndirizzo").removeClass("is-invalid");
+        if ($("#inputData").val() == "") {
+            $("#inputData").addClass("is-invalid");
+            error = true;
+        }
+        else $("#inputData").removeClass("is-invalid");
+
+        if (isAdmin) {
+            //count stars
+            let stars = 0;
+            $(".starNewPerizia").each(function () {
+                if ($(this).prop("icon") == "mdi:star") stars++;
+            });
+            if (stars == 0) {
+                $(".containerNewPeriziaScore").addClass("is-invalid");
+                error = true;
+            }
+            else $(".containerNewPeriziaScore").removeClass("is-invalid");
+        }
+
+        if (error) {
+            //create a Swal alert to notify the user that the operation is failed
+            Swal.fire({
+                title: 'Errore',
+                text: 'I dati inseriti non sono corretti',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            });
+            return;
+        }
+        else {
+            //geocoder per ottenere lat e long su base dell'indirizzo
+            let geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': $("#inputIndirizzo").val() }, async function (results, status) {
+                if (status == 'OK') {
+                    let latitude = parseFloat(results[0].geometry.location.lat());
+                    let longitude = parseFloat(results[0].geometry.location.lng());
+
+                    //upload delle foto su cloudinary e poi salvataggio della perizia
+                    let photosUrl = await uploadPhotos();
+
+                    async function uploadPhotos() {
+                        let photosUrl = [];
+                        let promises = [];
+                        let index = 0;
+                        $(".photoShotted").each(function () {
+                            if($(this).prop("src") == "" || $(this).prop("src") == "img/placeholder.png" || $(this).prop("src") == 'https://cordovaapp/index.html') return;
+                            if ($(".inputDescrizioneFoto").eq(index).val() == "") return;
+                            let request = inviaRichiesta("POST", "/api/base64Cloudinary", {
+                                description: $(".inputDescrizioneFoto").eq(index++).val(),
+                                img: $(this).prop("src")
+                            })
+                            request.fail(errore);
+                            request.done(function (data) {
+                                photosUrl.push(data);
+                            });
+                            promises.push(request);
+                        });
+                        return Promise.all(promises).then(function () {
+                            return photosUrl;
+                        });
+                    }
+
+                    let perizia = {
+                        codOperator: operator,
+                        dateAdded: $("#inputData").val(),
+                        place: {
+                            name: $("#inputNomeLuogo").val(),
+                            coordinates: {
+                                latitude: latitude,
+                                longitude: longitude
+                            }
+                        },
+                        description: $("#inputDescrizione").val(),
+                        photos: photosUrl,
+                        title: $("#inputTitolo").val(),
+                        completed: true,
+                        validated: false,
+                        comment: "Nessuna osservazione"
+                    }
+                    if (isAdmin) {
+                        let stars = 0;
+                        $(".starNewPerizia").each(function () {
+                            if ($(this).prop("icon") == "mdi:star") stars++;
+                        });
+                        perizia.score = stars;
+                    }
+                    else perizia.score = 1;
+                    let request = inviaRichiesta("POST", "/api/insertPerizia", { perizia });
+                    request.fail(errore);
+                    request.done(function (data) {
+                        console.log(data);
+                        //create a Swal alert to notify the user that the operation is completed
+                        Swal.fire({
+                            title: 'Perizia inserita',
+                            text: 'La perizia è stata inserita con successo',
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        });
+
+                        //pulisce i campi
+                        $("#inputTitolo").val("");
+                        $("#inputDescrizione").val("");
+                        $("#inputDescrizioneFoto").val("");
+                        $("#inputNomeLuogo").val("");
+                        $("#inputIndirizzo").val("");
+                        $("#inputData").val("");
+                        $(".photoShotted").each(function () {
+                            $(this).prop("src", "");
+                        });
+                        $(".inputDescrizioneFoto").each(function () {
+                            $(this).val("");
+                        });
+
+                        if (isAdmin) {
+                            $(".starNewPerizia").each(function () {
+                                $(this).prop("icon", "mdi:star-outline");
+                            });
+                        }
+
+                        //visualizziamo mapContainer richiedendo di nuovo le perizie (getPerizie)
+                        if (isAdmin) getPerizie();
+                        else getPerizie(operator);
+
+                        //nascondiamo newPeriziaContainer
+                        $(".addPeriziaContainer").addClass("d-none");
+                        $(".addPeriziaContainer").removeClass("d-block");
+                        $(".dashboardAdmin").addClass("d-none");
+                        $(".periziaDetails").addClass("d-none");
+                        $(".mapContainer").css("display", "block");
+                        $(".contattamiContainter").addClass("d-none");
+
+                    });
+                } else {
+                    //create a Swal alert to notify the user that the operation is failed
+                    Swal.fire({
+                        title: 'Errore',
+                        text: 'L\'indirizzo inserito non è corretto',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+            });
+        }
+    }
 
     function viewLikedPerizie() {
         pagination = 1;
@@ -181,10 +536,10 @@ window.onload = async function () {
                 let perizia = perizieGlobal.find(x => x._id == likedPerizie[i]);
                 perizie.push(perizia);
             }
+            $(".results").text(perizie.length + " risultati");
             inserisciMarkers(perizie);
             visualizePerizie(perizie);
         }
-
     }
 
     function filterPerizie() {
@@ -319,6 +674,7 @@ window.onload = async function () {
                 indexPerizie = 0;
                 indexScoreContainer = 0;
                 containerPerizie.empty();
+                $(".results").text(data.length + " risultati");
                 if (data.length == 0) {
                     containerPerizie.append(
                         $("<div>")
@@ -442,7 +798,12 @@ window.onload = async function () {
                 if (data.admin != "true" && data.admin != "false") error = true;
 
                 if (error) {
-                    alert("Dati inseriti non validi");
+                    //Swall alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Errore',
+                        text: 'Dati inseriti non validi',
+                    })
                     return;
                 }
 
@@ -451,7 +812,13 @@ window.onload = async function () {
                 request.done((data) => {
                     console.log(data);
                     if (data.acknowledged) {
-                        alert("Dati modificati");
+                        //Swall alert success
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Dati modificati con successo',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                         //set all input values in readonly
                         $(".valuesOperator").each(function () {
                             $(this).prop("readonly", true);
@@ -467,7 +834,12 @@ window.onload = async function () {
                         listDipendenti();
                     }
                     else {
-                        alert("Errore nella modifica dei dati");
+                        //Swall alert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Errore',
+                            text: 'Dati inseriti non validi',
+                        })
                     }
                 });
             });
@@ -578,12 +950,15 @@ window.onload = async function () {
         $(".mapContainer").css("display", "none");
         $(".dashboardAdmin").removeClass("d-none");
         $(".periziaDetails").addClass("d-none");
+        $(".contattamiContainter").addClass("d-none");
     }
 
     function viewMap() {
         $(".mapContainer").css("display", "block");
         $(".dashboardAdmin").addClass("d-none");
         $(".periziaDetails").addClass("d-none");
+        $(".contattamiContainter").addClass("d-none");
+
 
         $("#annullaChanges").remove();
         $("#saveChanges").remove();
@@ -594,12 +969,12 @@ window.onload = async function () {
         $(".numberPagination").text("Pagina: " + pagination);
         indexScoreContainer = 0;
         containerPerizie.empty();
-        if(isAdmin)
+        if (isAdmin)
             getPerizie(null, null);
         else
             getPerizie(operator, null);
-        
-        
+
+
     }
 
     function orderPerizie() {
@@ -664,7 +1039,7 @@ window.onload = async function () {
                 });
             }
             inserisciMarkers(data);
-            if (data.length > 0){
+            if (data.length > 0) {
                 pagination = 1;
                 $(".numberPagination").text("Pagina: " + pagination);
                 indexPerizie = 0;
@@ -690,7 +1065,7 @@ window.onload = async function () {
             $("<div>").addClass("col").appendTo(containerPerizie)
                 .append($("<div>").addClass("card mb-3")
                     .append($("<div>").addClass("row g-0")
-                        .append($("<div>").addClass("col-md-4")
+                        .append($("<div>").addClass("col-md-4 col-sm-12 d-flex justify-content-center")
                             .append($("<img>").attr("src", perizia.photos[0].url).addClass("img-fluid rounded-start").attr("alt", "testImage").on("click", function () { visualizzaPerizia(perizia) })))
                         .append($("<div>").addClass("col-md-8")
                             .append($("<div>").addClass("card-body")
@@ -730,6 +1105,9 @@ window.onload = async function () {
                         console.log(data);
                         $("#" + idPerizia).attr("icon", "mdi:heart");
                         $("#" + idPerizia).css("color", "red");
+
+                        //aggiorno la lista delle perizie preferite
+                        likedPerizie.push(idPerizia);
                     });
                 }
                 else {
@@ -740,6 +1118,9 @@ window.onload = async function () {
                         console.log(data);
                         $("#" + idPerizia).attr("icon", "mdi:heart-outline");
                         $("#" + idPerizia).css("color", "black");
+
+                        //aggiorno la lista delle perizie preferite
+                        likedPerizie.splice(likedPerizie.indexOf(idPerizia), 1);
                     });
                 }
 
@@ -806,7 +1187,7 @@ window.onload = async function () {
         //si potrebbe usare il setInterval per usare il getPosition() tipo ogni 10secondi
         let gpsOptions = {
             enableHighAccuracy: false,
-            timeout: 5000,
+            timeout: 10000,
             maximumAge: 0 // tempo max di presenza in cache della risposta (ms) //cioè mi restituisce l'ultimo valore senza aggiornarlo
         }
         //navigator.geolocation.getCurrentPosition(visualizzaPosizione, errore, gpsOptions)
@@ -906,8 +1287,8 @@ window.onload = async function () {
                 let date = $(".datePerizia").val();
                 let completed = $(".completedPerizia").prop("checked");
                 let validated = $(".validatedPerizia").prop("checked");
-                let comment = $(".commentoPerizia").val();
-
+                let comment; 
+                if(isAdmin) comment = $(".commentoPerizia").val();
                 //calculate the score
                 let score = 0;
                 $(".star").each(function () {
@@ -952,10 +1333,21 @@ window.onload = async function () {
                 if (score != perizia.score && score != 0) parameters.score = score;
                 else if (score == 0) error = true;
                 else delete parameters.score;
-                if (comment != perizia.comment && comment != "") parameters.comment = comment;
-                else if (comment == "") error = true;
+                if(isAdmin) {
+                    if (comment != perizia.comment && comment != "") parameters.comment = comment;
+                    else if (comment == "") error = true;
+                    else delete parameters.comment;
+                }
+
+                console.log("SAVED PARAMETERS: ", parameters);
                 if (error) {
-                    alert("Non puoi lasciare campi vuoti");
+                    //Swal alert
+                    Swal.fire({
+                        title: 'Errore',
+                        text: "Non puoi lasciare campi vuoti",
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
                     return;
                 }
                 //send the request to the server
@@ -963,8 +1355,17 @@ window.onload = async function () {
                 request.fail(errore);
                 request.done(function (data) {
                     console.log(data);
-                    alert("Modifiche salvate");
-                    location.reload();
+                    //Swal alert and after reload the page
+                    Swal.fire({
+                        title: 'Modifiche salvate',
+                        text: "Le modifiche sono state salvate con successo",
+                        icon: 'success',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
                 });
             });
 
@@ -977,6 +1378,7 @@ window.onload = async function () {
             $(".periziaDetails").addClass("d-none");
             $(".mapContainer").css("display", "block");
             $(".perizieContainer").css("display", "block");
+            $(".contattamiContainter").addClass("d-none");
         });
     }
 
@@ -1005,8 +1407,14 @@ window.onload = async function () {
     }
 
     function logout() {
+        //and also googleplus logout cordova plugin
+        window.plugins.googleplus.logout(
+            function (msg) {
+                console.log(msg);
+            }
+        );
         localStorage.removeItem("token")
-        window.location.href = "login.html"
+        window.location.href = "login.html";
     }
 
 
@@ -1124,7 +1532,7 @@ function createGoogleMaps() {
         // creazione dinamica del CDN di accesso alle google maps
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = URL + '/js?&key=' + MAP_KEY + "&libraries=geometry&callback=";
+        script.src = URL + '/js?&key=' + MAP_KEY + "&libraries=geometry";
         document.body.appendChild(script);
         script.onload = resolve; //evento che si verifica quando si carica lo script
         script.onerror = reject;
